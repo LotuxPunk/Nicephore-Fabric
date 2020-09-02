@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "nicephore",
+  "version": "${version}",
+  "name": "Nicephore",
+  "description": "This Forge mod makes it quicker to share screenshots online by giving you the ability to quickly open the screenshots folder and also easily deal with Discord's max sharing limit and slow uploads by saving lower quality, smaller sized JPEGs that you can share instead!",
+  "authors": [
+    "LotuxPunk",
+    "Paint_Ninja"
+  ],
+  "contact": {
+    "website": "https://www.curseforge.com/minecraft/mc-mods/nicephore"
+  },
+  "license": "MIT",
+  "icon": "assets/nicephore/nicephore.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.vandendaelen.nicephore.client.NicephoreClient"
+    ],
+    "main": [
+      "com.vandendaelen.nicephore.Nicephore"
+    ],
+    "modmenu": [
+      "com.vandendaelen.nicephore.integration.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "nicephore.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.9.2+build.206",
+    "fabric": "*",
+    "minecraft": "1.16.2"
+  },
+  "custom": {
+    "modmenu:api": true,
+    "modmenu:clientsideOnly": true
+  }
+}

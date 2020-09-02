@@ -1,0 +1,20 @@
+{
+  "nicephore.screenshot.success":"Capture d'écran effectuée - %s",
+  "nicephore.screenshot.error":"Échec à la capture d'écran",
+  "nicephore.screenshot.png":"Voir PNG",
+  "nicephore.screenshot.jpg":"Voir JPG",
+  "nicephore.screenshot.folder":"Ouvrir le dossier 'screenshots'",
+  "nicephore.screenshot.options" : "[%s] [%s] [%s]",
+  "nicephore.screenshot.reducedOptions" : "[%s] [%s]",
+  "nicephore.screenshot.optimize":"Optimisation de la capture d'écran en cours",
+  "nicephore.screenshot.optimizeFinished":"Capture d'écran optimisée et sauvegardée",
+  "nicephore.clipboard.success": "La dernière capture d'écran copiée dans le presse-papier",
+  "nicephore.clipboard.error": "Erreur à la copie de la dernière capture d'écan",
+  "nicephore.gui.screenshots": "Captures d'écran",
+  "nicephore.gui.screenshots.pages": "%s sur %s captures d'écran",
+  "nicephore.gui.screenshots.copy": "Copier",
+  "nicephore.clipboard.empty": "Le dossier \"screenshots\" est vide",
+  "nicephore.keybinds.copy": "Copier la dernière capture d'écran",
+  "nicephore.keybinds.gui": "Ouvrir l'interface de captures d'écran",
+  "nicephore.keybinds.category": "Nicephore"
+}

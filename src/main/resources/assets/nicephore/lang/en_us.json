@@ -1,0 +1,20 @@
+{
+  "nicephore.screenshot.success":"Screenshot saved: %s",
+  "nicephore.screenshot.error":"Screenshot failed",
+  "nicephore.screenshot.png":"Show PNG",
+  "nicephore.screenshot.jpg":"Show JPG",
+  "nicephore.screenshot.folder":"Open screenshots folder",
+  "nicephore.screenshot.options" : "[%s] [%s] [%s]",
+  "nicephore.screenshot.reducedOptions" : "[%s] [%s]",
+  "nicephore.screenshot.optimize":"Optimizing screenshot...",
+  "nicephore.screenshot.optimizeFinished":"Screenshot optimised and saved",
+  "nicephore.clipboard.success": "Last screenshot copied in the clipboard",
+  "nicephore.clipboard.error": "Error when trying to copy the last screenshot",
+  "nicephore.gui.screenshots": "Screenshots",
+  "nicephore.gui.screenshots.pages": "%s of %s screenshots",
+  "nicephore.gui.screenshots.copy": "Copy",
+  "nicephore.clipboard.empty": "Screenshots folder is empty",
+  "nicephore.keybinds.copy": "Copy last screenshot",
+  "nicephore.keybinds.gui": "Open the screenshots interface",
+  "nicephore.keybinds.category": "Nicephore"
+}
