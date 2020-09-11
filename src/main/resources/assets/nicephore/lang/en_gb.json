@@ -13,8 +13,15 @@
   "nicephore.gui.screenshots": "Screenshots",
   "nicephore.gui.screenshots.pages": "%s of %s screenshots",
   "nicephore.gui.screenshots.copy": "Copy",
+  "nicephore.gui.screenshots.delete": "Delete",
+  "nicephore.gui.delete": "Delete a screenshot?",
+  "nicephore.gui.delete.question": "Do you really want to remove the screenshot %s?",
+  "nicephore.gui.delete.yes": "Yes",
+  "nicephore.gui.delete.no": "No",
   "nicephore.clipboard.empty": "Screenshots folder is empty",
   "nicephore.keybinds.copy": "Copy last screenshot",
   "nicephore.keybinds.gui": "Open the screenshots interface",
-  "nicephore.keybinds.category": "Nicephore"
+  "nicephore.screenshot.deleted.success": "%s successfully deleted!",
+  "nicephore.screenshot.deleted.error": "Error when deleting %s",
+  "nicephore.gui.delete.question": "Do you really want to remove the screenshot %s?"
 }

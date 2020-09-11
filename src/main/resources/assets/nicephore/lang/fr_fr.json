@@ -13,8 +13,14 @@
   "nicephore.gui.screenshots": "Captures d'écran",
   "nicephore.gui.screenshots.pages": "%s sur %s captures d'écran",
   "nicephore.gui.screenshots.copy": "Copier",
+  "nicephore.gui.screenshots.delete": "Supprimer",
+  "nicephore.gui.delete": "Supprimer une capture d'écran ?",
+  "nicephore.gui.delete.question": "Voulez-vous vraiment supprimer la capture d'écran %s ?",
+  "nicephore.gui.delete.yes": "Oui",
+  "nicephore.gui.delete.no": "Non",
   "nicephore.clipboard.empty": "Le dossier \"screenshots\" est vide",
   "nicephore.keybinds.copy": "Copier la dernière capture d'écran",
   "nicephore.keybinds.gui": "Ouvrir l'interface de captures d'écran",
-  "nicephore.keybinds.category": "Nicephore"
+  "nicephore.screenshot.deleted.success": "%s supprimé avec succès !",
+  "nicephore.screenshot.deleted.error": "Erreur a la supression de %s"
 }
