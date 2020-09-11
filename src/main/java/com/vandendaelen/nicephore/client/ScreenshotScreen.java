@@ -27,7 +27,7 @@ public class ScreenshotScreen extends Screen {
     private static final TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
     private static Identifier SCREENSHOT_TEXTURE;
     private ArrayList<File> screenshots;
-    private int index;
+    private static int index;
     private float aspectRatio;
 
     public ScreenshotScreen() {
@@ -36,7 +36,7 @@ public class ScreenshotScreen extends Screen {
         FilenameFilter filter = (dir, name) -> name.endsWith(".jpg") || name.endsWith(".png");
 
         screenshots = (ArrayList<File>) Arrays.stream(SCREENSHOTS_DIR.listFiles(filter)).collect(Collectors.toList());
-        index = screenshots.size() - 1;
+        index = getIndex();
         aspectRatio = 1.7777F;
     }
 
@@ -94,7 +94,22 @@ public class ScreenshotScreen extends Screen {
         if (index + value >= 0 && index + value < max){
             index += value;
         }
+        else {
+            if (index + value < 0){
+                index = max - 1;
+            }
+            else {
+                index = 0;
+            }
+        }
         init();
+    }
+
+    private int getIndex(){
+        if (index >= screenshots.size()){
+            index = screenshots.size() - 1;
+        }
+        return index;
     }
 
     public static boolean canBeShow(){
