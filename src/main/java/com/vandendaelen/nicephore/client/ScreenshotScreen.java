@@ -10,6 +10,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -17,6 +18,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.MessageFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -95,7 +99,7 @@ public class ScreenshotScreen extends Screen {
         drawTexture(matrixStack, centerX - width / 2, 50, 0, 0, width, height, width, height);
 
         drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.gui.screenshots.pages", index + 1, screenshots.size()), centerX, 20, Color.WHITE.getRGB());
-        drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new LiteralText(screenshots.get(index).getName()), centerX, 35, Color.WHITE.getRGB());
+        drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new LiteralText(MessageFormat.format("{0} ({1})", screenshots.get(index).getName(), getFileSizeMegaBytes(screenshots.get(index)))), centerX, 35, Color.WHITE.getRGB());
     }
 
     private void modIndex(int value){
@@ -123,5 +127,17 @@ public class ScreenshotScreen extends Screen {
 
     public static boolean canBeShow(){
         return SCREENSHOTS_DIR.list().length > 0;
+    }
+
+    private static String getFileSizeMegaBytes(File file) {
+        final double size = FileUtils.sizeOf(file);
+        final NumberFormat formatter = new DecimalFormat("#0.00");
+        final int MB_SIZE = 1024 * 1024;
+        final int KB_SIZE = 1024;
+
+        if (size > MB_SIZE){
+            return MessageFormat.format("{0} MB", formatter.format((double) FileUtils.sizeOf(file) / MB_SIZE));
+        }
+        return MessageFormat.format("{0} KB", formatter.format((double) FileUtils.sizeOf(file) / KB_SIZE));
     }
 }
