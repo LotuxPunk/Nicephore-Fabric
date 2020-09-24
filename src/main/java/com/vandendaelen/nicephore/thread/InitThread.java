@@ -31,36 +31,49 @@ public final class InitThread extends Thread {
         NicephoreConfig config = AutoConfig.getConfigHolder(NicephoreConfig.class).getConfig();
 
         if (config.isOptimisedOutput()) {
-            final Gson gson = new Gson();
-            JsonReader reader = null;
-            try {
-                FileUtils.copyURLToFile(new URL(Reference.DOWNLOADS_URLS), REFERENCES_JSON);
-                reader = new JsonReader(new FileReader(REFERENCES_JSON));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            if (Files.exists(DESTINATION.toPath())) {
 
-            Type collectionType = new TypeToken<Collection<Response>>() {}.getType();
-            Collection<Response> responses = gson.fromJson(reader, collectionType);
-            Optional<Response> response = responses.stream().filter(response1 -> response1.platform.equals(Util.OS.WINDOWS.name())).findFirst();
-
-            if (response.isPresent()){
-                if (!Files.exists(DESTINATION.toPath())) {
+                {
                     try {
-                        Files.createDirectory(DESTINATION.toPath());
-                    } catch (IOException e) {
+                        Optional<Response> response = getResponse(getJsonReader(REFERENCES_JSON));
+
+                        if (response.isPresent()) {
+                            Reference.Command.OXIPNG = response.get().oxipng_command;
+                            Reference.Command.ECT = response.get().ect_command;
+
+                            Reference.File.OXIPNG = response.get().oxipng_file;
+                            Reference.File.ECT = response.get().ect_file;
+
+                            Reference.Version.OXIPNG = response.get().oxipng_version;
+                            Reference.Version.ECT = response.get().ect_version;
+                        }
+                    } catch (final IOException e) {
                         e.printStackTrace();
                     }
                 }
 
-                downloadAndExtract(response.get().oxipng, OXIPNG_ZIP);
-                downloadAndExtract(response.get().ect, ECT_ZIP);
+                {
+                    try {
+                        final Optional<Response> response = getResponse(getJsonReader(Reference.DOWNLOADS_URLS, REFERENCES_JSON));
 
-                Reference.Command.OXIPNG = response.get().oxipng_command;
-                Reference.Command.ECT = response.get().ect_command;
+                        if (response.isPresent()) {
+                            if (!Reference.Version.OXIPNG.equals(response.get().oxipng_version)) {
+                                Reference.Version.OXIPNG = response.get().oxipng_version;
+                                downloadAndExtract(response.get().oxipng, OXIPNG_ZIP);
+                            }
 
-                Reference.File.OXIPNG = response.get().oxipng_file;
-                Reference.File.ECT = response.get().ect_file;
+                            if (!Reference.Version.ECT.equals(response.get().ect_version)) {
+                                Reference.Version.ECT = response.get().ect_version;
+                                downloadAndExtract(response.get().ect, ECT_ZIP);
+                            }
+                        }
+                    } catch (final IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            else{
+                freshInstall();
             }
         }
 
@@ -118,9 +131,47 @@ public final class InitThread extends Thread {
 
     }
 
+    private Optional<Response> getResponse(final JsonReader reader) {
+        final Gson gson = new Gson();
+        final Type collectionType = new TypeToken<Collection<Response>>() {}.getType();
+        final Collection<Response> responses = gson.fromJson(reader, collectionType);
+        final Optional<Response> response = responses.stream().filter(response1 -> response1.platform.equals(Util.getOS().name())).findFirst();
+        return response;
+    }
+
+    private JsonReader getJsonReader(String URL, final File file) throws IOException {
+        FileUtils.copyURLToFile(new URL(URL), file);
+        return getJsonReader(file);
+    }
+
+    private JsonReader getJsonReader(final File file) throws FileNotFoundException {
+        return new JsonReader(new FileReader(file));
+    }
+
+    private final void freshInstall() {
+        try {
+            Files.createDirectory(DESTINATION.toPath());
+            final Optional<Response> response = getResponse(getJsonReader(Reference.DOWNLOADS_URLS, REFERENCES_JSON));
+
+            Reference.Command.OXIPNG = response.get().oxipng_command;
+            Reference.Command.ECT = response.get().ect_command;
+
+            Reference.File.OXIPNG = response.get().oxipng_file;
+            Reference.File.ECT = response.get().ect_file;
+
+            Reference.Version.OXIPNG = response.get().oxipng_version;
+            Reference.Version.ECT = response.get().ect_version;
+
+            downloadAndExtract(response.get().oxipng, OXIPNG_ZIP);
+            downloadAndExtract(response.get().ect, ECT_ZIP);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     static class Response{
         String platform;
-        String oxipng, oxipng_file, oxipng_command;
-        String ect, ect_file, ect_command;
+        String oxipng, oxipng_file, oxipng_command, oxipng_version;
+        String ect, ect_file, ect_command, ect_version;
     }
 }

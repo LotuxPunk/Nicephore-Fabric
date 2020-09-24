@@ -13,4 +13,8 @@ public class Reference {
     public static class File {
         public static String OXIPNG, ECT = "";
     }
+
+    public static class Version {
+        public static String OXIPNG, ECT = "";
+    }
 }
