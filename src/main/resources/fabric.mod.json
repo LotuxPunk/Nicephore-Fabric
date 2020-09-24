@@ -20,9 +20,6 @@
     ],
     "main": [
       "com.vandendaelen.nicephore.Nicephore"
-    ],
-    "modmenu": [
-      "com.vandendaelen.nicephore.integration.ModMenuIntegration"
     ]
   },
   "mixins": [
@@ -31,9 +28,5 @@
   "depends": {
     "fabric": "*",
     "minecraft": ">=1.16.2"
-  },
-  "custom": {
-    "modmenu:api": true,
-    "modmenu:clientsideOnly": true
   }
 }
