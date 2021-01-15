@@ -30,7 +30,7 @@ public class ScreenshotScreen extends Screen {
     private static final File SCREENSHOTS_DIR = new File(MinecraftClient.getInstance().runDirectory, "screenshots");
     private static final TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
     private static Identifier SCREENSHOT_TEXTURE;
-    private ArrayList<File> screenshots;
+    private final ArrayList<File> screenshots;
     private static int index;
     private float aspectRatio;
 
@@ -126,7 +126,7 @@ public class ScreenshotScreen extends Screen {
     }
 
     public static boolean canBeShow(){
-        return SCREENSHOTS_DIR.list().length > 0;
+        return SCREENSHOTS_DIR.exists() && SCREENSHOTS_DIR.list().length > 0;
     }
 
     private static String getFileSizeMegaBytes(File file) {
