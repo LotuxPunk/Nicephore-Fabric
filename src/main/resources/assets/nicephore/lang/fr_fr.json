@@ -22,5 +22,6 @@
   "nicephore.keybinds.copy": "Copier la dernière capture d'écran",
   "nicephore.keybinds.gui": "Ouvrir l'interface de captures d'écran",
   "nicephore.screenshot.deleted.success": "%s supprimé avec succès !",
-  "nicephore.screenshot.deleted.error": "Erreur a la supression de %s"
+  "nicephore.screenshot.deleted.error": "Erreur a la supression de %s",
+  "nicephore.keybinds.category": "Nicephore"
 }

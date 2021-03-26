@@ -22,5 +22,6 @@
   "nicephore.keybinds.copy": "Copy last screenshot",
   "nicephore.keybinds.gui": "Open the screenshots interface",
   "nicephore.screenshot.deleted.success": "%s successfully deleted!",
-  "nicephore.screenshot.deleted.error": "Error when deleting %s"
+  "nicephore.screenshot.deleted.error": "Error when deleting %s",
+  "nicephore.keybinds.category": "Nicephore"
 }

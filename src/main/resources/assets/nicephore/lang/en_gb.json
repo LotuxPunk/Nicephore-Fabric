@@ -23,5 +23,6 @@
   "nicephore.keybinds.gui": "Open the screenshots interface",
   "nicephore.screenshot.deleted.success": "%s successfully deleted!",
   "nicephore.screenshot.deleted.error": "Error when deleting %s",
-  "nicephore.gui.delete.question": "Do you really want to remove the screenshot %s?"
+  "nicephore.gui.delete.question": "Do you really want to remove the screenshot %s?",
+  "nicephore.keybinds.category": "Nicephore"
 }
