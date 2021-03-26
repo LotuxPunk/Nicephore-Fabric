@@ -23,6 +23,7 @@ import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 public class ScreenshotScreen extends Screen {
@@ -39,7 +40,7 @@ public class ScreenshotScreen extends Screen {
 
         FilenameFilter filter = (dir, name) -> name.endsWith(".jpg") || name.endsWith(".png");
 
-        screenshots = (ArrayList<File>) Arrays.stream(SCREENSHOTS_DIR.listFiles(filter)).collect(Collectors.toList());
+        screenshots = (ArrayList<File>) Arrays.stream(SCREENSHOTS_DIR.listFiles(filter)).sorted(Comparator.comparingLong(File::lastModified).reversed()).collect(Collectors.toList());
         index = getIndex();
         aspectRatio = 1.7777F;
     }
