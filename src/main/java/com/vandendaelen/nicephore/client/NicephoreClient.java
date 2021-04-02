@@ -61,7 +61,7 @@ public class NicephoreClient implements ClientModInitializer {
                     MinecraftClient.getInstance().openScreen(new ScreenshotScreen());
                 }
                 else {
-                    PlayerHelper.sendHotbarMessage(new TranslatableText("nicephore.clipboard.empty"));
+                    PlayerHelper.sendHotbarMessage(new TranslatableText("nicephore.screenshots.empty"));
                 }
 
             }

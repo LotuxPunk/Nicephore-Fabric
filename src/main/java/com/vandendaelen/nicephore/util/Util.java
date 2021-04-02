@@ -8,7 +8,6 @@ import net.minecraft.util.Identifier;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ResourceBundle;
 
 public class Util {
     public enum OS {
@@ -34,7 +33,7 @@ public class Util {
         return os;
     }
 
-    public static Identifier fileTotexture(File file) {
+    public static Identifier fileToTexture(File file) {
         NativeImage nativeImage = null;
         try {
             nativeImage = NativeImage.read(new FileInputStream(file));

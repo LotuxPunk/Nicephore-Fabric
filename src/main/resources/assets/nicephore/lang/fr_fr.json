@@ -23,5 +23,6 @@
   "nicephore.keybinds.gui": "Ouvrir l'interface de captures d'écran",
   "nicephore.screenshot.deleted.success": "%s supprimé avec succès !",
   "nicephore.screenshot.deleted.error": "Erreur a la supression de %s",
-  "nicephore.keybinds.category": "Nicephore"
+  "nicephore.keybinds.category": "Nicephore",
+  "nicephore.screenshots.loading.error": "Une erreur s'est produite à l'ouverture d'un fichier"
 }

@@ -1,5 +1,6 @@
 package com.vandendaelen.nicephore.client;
 
+import com.vandendaelen.nicephore.helper.PlayerHelper;
 import com.vandendaelen.nicephore.util.CopyImageToClipBoard;
 import com.vandendaelen.nicephore.util.Util;
 import net.minecraft.client.MinecraftClient;
@@ -51,7 +52,7 @@ public class ScreenshotScreen extends Screen {
         super.init();
 
         if (screenshots.isEmpty()){
-            this.onClose();
+            closeScreen("nicephore.screenshots.empty");
             return;
         }
 
@@ -67,7 +68,14 @@ public class ScreenshotScreen extends Screen {
         }
 
         textureManager.destroyTexture(SCREENSHOT_TEXTURE);
-        SCREENSHOT_TEXTURE = Util.fileTotexture(screenshots.get(index));
+        File fileToLoad = screenshots.get(index);
+        if (fileToLoad.exists()){
+            SCREENSHOT_TEXTURE = Util.fileToTexture(fileToLoad);
+        }
+        else{
+            closeScreen("nicephore.screenshots.loading.error");
+            return;
+        }
 
         this.buttons.clear();
         this.addButton(new ButtonWidget(this.width / 2 + 50, this.height / 2 + 75, 20, 20, new LiteralText(">"), button -> modIndex(1)));
@@ -81,6 +89,11 @@ public class ScreenshotScreen extends Screen {
             }
         }));
         this.addButton(new ButtonWidget(this.width / 2 - 5, this.height / 2 + 75, 50, 20,new TranslatableText("nicephore.gui.screenshots.delete"), button -> deleteScreenshot(screenshots.get(index))));
+    }
+
+    private void closeScreen(String textComponentId) {
+        this.onClose();
+        PlayerHelper.sendHotbarMessage(new TranslatableText(textComponentId));
     }
 
     private void deleteScreenshot(File file) {
