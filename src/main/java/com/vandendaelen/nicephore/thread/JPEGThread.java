@@ -1,13 +1,11 @@
 package com.vandendaelen.nicephore.thread;
 
-import com.vandendaelen.nicephore.Nicephore;
 import com.vandendaelen.nicephore.config.NicephoreConfig;
 import com.vandendaelen.nicephore.helper.PlayerHelper;
 import com.vandendaelen.nicephore.util.CopyImageToClipBoard;
 import com.vandendaelen.nicephore.util.Reference;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.minecraft.client.texture.NativeImage;
-import net.minecraft.text.BaseText;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableText;
@@ -69,7 +67,7 @@ public final class JPEGThread extends Thread {
 
                     // attempt to optimise the JPEG screenshot using ECT
                     try {
-                        final File ect = new File("mods\\nicephore\\" + Reference.File.ECT);
+                        final File ect = new File(String.format("mods%snicephore%s", File.separator, File.separator) + Reference.File.ECT);
                         // ECT is lightning fast for small JPEG files so we might as well use optimisation level 9
                         final Process p = Runtime.getRuntime().exec(MessageFormat.format(Reference.Command.ECT, ect, jpegFile));
                         p.waitFor();
@@ -81,7 +79,7 @@ public final class JPEGThread extends Thread {
 
                 // attempt to optimise the PNG screenshot using Oxipng
                 try {
-                    final File oxipng = new File("mods\\nicephore\\" + Reference.File.OXIPNG);
+                    final File oxipng = new File(String.format("mods%snicephore%s", File.separator, File.separator) + Reference.File.OXIPNG);
                     final File pngFile = new File(screenshot.getParentFile(), screenshot.getName());
                     final Process p = Runtime.getRuntime().exec(MessageFormat.format(Reference.Command.OXIPNG, oxipng, config.getPngOptimisationLevel(), pngFile));
                     p.waitFor();

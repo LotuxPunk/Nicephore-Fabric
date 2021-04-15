@@ -21,10 +21,10 @@ import java.util.zip.ZipInputStream;
 
 public final class InitThread extends Thread {
     private static final File
-            DESTINATION = new File(MinecraftClient.getInstance().runDirectory.getAbsolutePath(), "mods\\nicephore"),
-            REFERENCES_JSON = new File(DESTINATION,"\\references.json"),
-            OXIPNG_ZIP = new File(DESTINATION,"\\oxipng.zip"),
-            ECT_ZIP = new File(DESTINATION,"\\ect.zip");
+            DESTINATION = new File(MinecraftClient.getInstance().runDirectory.getAbsolutePath(), String.format("mods%snicephore", File.separator)),
+            REFERENCES_JSON = new File(DESTINATION, String.format("%sreferences.json", File.separator)),
+            OXIPNG_ZIP = new File(DESTINATION, String.format("%soxipng.zip", File.separator)),
+            ECT_ZIP = new File(DESTINATION, String.format("%sect.zip", File.separator));
 
     @Override
     public void run() {
