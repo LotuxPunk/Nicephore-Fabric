@@ -4,7 +4,7 @@ import com.vandendaelen.nicephore.config.NicephoreConfig;
 import com.vandendaelen.nicephore.helper.PlayerHelper;
 import com.vandendaelen.nicephore.util.CopyImageToClipBoard;
 import com.vandendaelen.nicephore.util.Reference;
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
+import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;

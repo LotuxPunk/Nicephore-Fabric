@@ -6,7 +6,7 @@ import com.google.gson.stream.JsonReader;
 import com.vandendaelen.nicephore.config.NicephoreConfig;
 import com.vandendaelen.nicephore.util.Reference;
 import com.vandendaelen.nicephore.util.Util;
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
+import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.MinecraftClient;
 import org.apache.commons.io.FileUtils;
 
