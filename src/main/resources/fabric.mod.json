@@ -3,7 +3,7 @@
   "id": "nicephore",
   "version": "${version}",
   "name": "Nicephore",
-  "description": "This Forge mod makes it quicker to share screenshots online by giving you the ability to quickly open the screenshots folder and also easily deal with Discord's max sharing limit and slow uploads by saving lower quality, smaller sized JPEGs that you can share instead!",
+  "description": "This Fabric mod makes it quicker to share screenshots online by giving you the ability to quickly open the screenshots folder and also easily deal with Discord's max sharing limit and slow uploads by saving lower quality, smaller sized JPEGs that you can share instead!",
   "authors": [
     "LotuxPunk",
     "Paint_Ninja"
