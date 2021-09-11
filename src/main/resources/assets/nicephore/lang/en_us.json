@@ -1,4 +1,5 @@
 {
+  "nicephore.screenshot.filter":"Filter: %s",
   "nicephore.screenshot.success":"Screenshot saved: %s",
   "nicephore.screenshot.error":"Screenshot failed",
   "nicephore.screenshot.png":"Show PNG",
@@ -18,7 +19,7 @@
   "nicephore.gui.delete.question": "Do you really want to remove the screenshot %s?",
   "nicephore.gui.delete.yes": "Yes",
   "nicephore.gui.delete.no": "No",
-  "nicephore.clipboard.empty": "Screenshots folder is empty",
+  "nicephore.screenshots.empty": "Screenshots folder is empty",
   "nicephore.keybinds.copy": "Copy last screenshot",
   "nicephore.keybinds.gui": "Open the screenshots interface",
   "nicephore.screenshot.deleted.success": "%s successfully deleted!",

@@ -1,4 +1,5 @@
 {
+  "nicephore.screenshot.filter":"Filtre: %s",
   "nicephore.screenshot.success":"Capture d'écran effectuée - %s",
   "nicephore.screenshot.error":"Échec à la capture d'écran",
   "nicephore.screenshot.png":"Voir PNG",
@@ -18,7 +19,7 @@
   "nicephore.gui.delete.question": "Voulez-vous vraiment supprimer la capture d'écran %s ?",
   "nicephore.gui.delete.yes": "Oui",
   "nicephore.gui.delete.no": "Non",
-  "nicephore.clipboard.empty": "Le dossier \"screenshots\" est vide",
+  "nicephore.screenshots.empty": "Le dossier \"screenshots\" est vide",
   "nicephore.keybinds.copy": "Copier la dernière capture d'écran",
   "nicephore.keybinds.gui": "Ouvrir l'interface de captures d'écran",
   "nicephore.screenshot.deleted.success": "%s supprimé avec succès !",

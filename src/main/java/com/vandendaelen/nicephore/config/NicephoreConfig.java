@@ -1,6 +1,7 @@
 package com.vandendaelen.nicephore.config;
 
 import com.vandendaelen.nicephore.Nicephore;
+import com.vandendaelen.nicephore.util.ScreenshotFilter;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -21,6 +22,9 @@ public class NicephoreConfig implements ConfigData {
             "\r\nNote: Enabling this will cause screenshots to take slightly longer to save as an optimisation step will have to be run first." +
             "\r\nTip: In the rare case that a screenshot PNG is corrupted, run \"oxipng --fix (filename).png\" to attempt to fix it.")
     boolean optimisedOutput = true;
+
+    @Comment("Only show the PNG, JPEG or JPEG/PNG on the screenshot GUI")
+    ScreenshotFilter filter = ScreenshotFilter.BOTH;
 
     @Comment("If enabled, a message will appear above your hotbar telling you that has optimisation started and another when finished. Useful for very slow computers.")
     boolean showOptimisationStatus = true;
@@ -48,5 +52,13 @@ public class NicephoreConfig implements ConfigData {
 
     public int getPngOptimisationLevel() {
         return pngOptimisationLevel;
+    }
+
+    public ScreenshotFilter getFilter() {
+        return filter;
+    }
+
+    public void setFilter(ScreenshotFilter value) {
+        filter = value;
     }
 }

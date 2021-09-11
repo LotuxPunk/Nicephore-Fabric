@@ -23,12 +23,12 @@ public class DeleteConfirmScreen extends Screen {
     protected void init() {
         super.init();
 
-        this.buttons.clear();
-        this.addButton(new ButtonWidget(this.width / 2 - 35, this.height / 2 + 30, 30, 20, new TranslatableText("nicephore.gui.delete.yes"), button -> {
+        this.children().clear();
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 35, this.height / 2 + 30, 30, 20, new TranslatableText("nicephore.gui.delete.yes"), button -> {
             deleteScreenshot();
-            MinecraftClient.getInstance().openScreen(new ScreenshotScreen());
+            MinecraftClient.getInstance().setScreen(new ScreenshotScreen());
         }));
-        this.addButton(new ButtonWidget(this.width / 2 + 5, this.height / 2 + 30, 30, 20, new TranslatableText("nicephore.gui.delete.no"), button -> MinecraftClient.getInstance().openScreen(new ScreenshotScreen())));
+        this.addDrawableChild(new ButtonWidget(this.width / 2 + 5, this.height / 2 + 30, 30, 20, new TranslatableText("nicephore.gui.delete.no"), button -> MinecraftClient.getInstance().setScreen(new ScreenshotScreen())));
 
     }
 
@@ -37,7 +37,7 @@ public class DeleteConfirmScreen extends Screen {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-        drawCenteredString(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.gui.delete.question", file.getName()).getString(), this.width / 2, this.height / 2 - 20, Color.RED.getRGB());
+        drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.gui.delete.question", file.getName()).getString(), this.width / 2, this.height / 2 - 20, Color.RED.getRGB());
     }
 
     private void deleteScreenshot(){
