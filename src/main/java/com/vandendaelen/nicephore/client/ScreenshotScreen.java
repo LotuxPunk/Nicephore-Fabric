@@ -129,11 +129,16 @@ public class ScreenshotScreen extends Screen {
             return;
         }
 
-        RenderSystem.setShaderTexture(0, SCREENSHOT_TEXTURE);
-        drawTexture(matrixStack, centerX - width / 2, 50, 0, 0, width, height, width, height);
+        if (screenshots.get(index).exists()) {
+            RenderSystem.setShaderTexture(0, SCREENSHOT_TEXTURE);
+            drawTexture(matrixStack, centerX - width / 2, 50, 0, 0, width, height, width, height);
 
-        drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.gui.screenshots.pages", index + 1, screenshots.size()), centerX, 20, Color.WHITE.getRGB());
-        drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new LiteralText(MessageFormat.format("{0} ({1})", screenshots.get(index).getName(), getFileSizeMegaBytes(screenshots.get(index)))), centerX, 35, Color.WHITE.getRGB());
+            drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.gui.screenshots.pages", index + 1, screenshots.size()), centerX, 20, Color.WHITE.getRGB());
+            drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new LiteralText(MessageFormat.format("{0} ({1})", screenshots.get(index).getName(), getFileSizeMegaBytes(screenshots.get(index)))), centerX, 35, Color.WHITE.getRGB());
+        }
+        else {
+            closeScreen("nicephore.screenshots.loading.error");
+        }
     }
 
     private void modIndex(int value){

@@ -41,7 +41,7 @@ public class DeleteConfirmScreen extends Screen {
     }
 
     private void deleteScreenshot(){
-        if (this.file.delete()){
+        if (this.file.exists() && this.file.delete()){
             PlayerHelper.sendMessage(new TranslatableText("nicephore.screenshot.deleted.success", file.getName()));
         }
         else{
