@@ -39,7 +39,7 @@ public class ScreenshotScreen extends Screen {
     private ArrayList<File> screenshots;
     private static int index;
     private float aspectRatio;
-    private NicephoreConfig config;
+    private final NicephoreConfig config;
 
     public ScreenshotScreen() {
         super(TITLE);
@@ -56,13 +56,9 @@ public class ScreenshotScreen extends Screen {
         aspectRatio = 1.7777F;
 
         if (!screenshots.isEmpty()) {
-//            closeScreen("nicephore.screenshots.empty");
-//            return;
-//        }
 
-            BufferedImage bimg;
             try {
-                bimg = ImageIO.read(screenshots.get(index));
+                BufferedImage bimg = ImageIO.read(screenshots.get(index));
                 int width = bimg.getWidth();
                 int height = bimg.getHeight();
                 bimg.getGraphics().dispose();
@@ -129,12 +125,13 @@ public class ScreenshotScreen extends Screen {
             return;
         }
 
-        if (screenshots.get(index).exists()) {
+        final File currentScreenshot = screenshots.get(index);
+        if (currentScreenshot.exists()) {
             RenderSystem.setShaderTexture(0, SCREENSHOT_TEXTURE);
             drawTexture(matrixStack, centerX - width / 2, 50, 0, 0, width, height, width, height);
 
             drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.gui.screenshots.pages", index + 1, screenshots.size()), centerX, 20, Color.WHITE.getRGB());
-            drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new LiteralText(MessageFormat.format("{0} ({1})", screenshots.get(index).getName(), getFileSizeMegaBytes(screenshots.get(index)))), centerX, 35, Color.WHITE.getRGB());
+            drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new LiteralText(MessageFormat.format("{0} ({1})", currentScreenshot.getName(), getFileSizeMegaBytes(currentScreenshot))), centerX, 35, Color.WHITE.getRGB());
         }
         else {
             closeScreen("nicephore.screenshots.loading.error");
