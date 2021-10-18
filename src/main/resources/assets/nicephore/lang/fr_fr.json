@@ -21,9 +21,11 @@
   "nicephore.gui.delete.no": "Non",
   "nicephore.screenshots.empty": "Le dossier \"screenshots\" est vide",
   "nicephore.keybinds.copy": "Copier la dernière capture d'écran",
-  "nicephore.keybinds.gui": "Ouvrir l'interface de captures d'écran",
+  "nicephore.keybinds.screenshots.gui": "Ouvrir l'interface de captures d'écran",
+  "nicephore.keybinds.gallery.gui": "Ouvrir l'interface de galerie",
   "nicephore.screenshot.deleted.success": "%s supprimé avec succès !",
   "nicephore.screenshot.deleted.error": "Erreur a la supression de %s",
   "nicephore.keybinds.category": "Nicephore",
-  "nicephore.screenshots.loading.error": "Une erreur s'est produite à l'ouverture d'un fichier"
+  "nicephore.screenshots.loading.error": "Une erreur s'est produite à l'ouverture d'un fichier",
+  "nicephore.gui.gallery.pages": "Page %s sur %s"
 }

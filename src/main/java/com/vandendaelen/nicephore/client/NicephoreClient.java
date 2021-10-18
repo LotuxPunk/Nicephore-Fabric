@@ -20,7 +20,8 @@ import java.io.IOException;
 @Environment(EnvType.CLIENT)
 public class NicephoreClient implements ClientModInitializer {
     private static KeyBinding copyKeyBinding;
-    private static KeyBinding guiKeyBinding;
+    private static KeyBinding guiScreenshotKeyBinding;
+    private static KeyBinding guiGalleryKeyBinding;
 
     @Override
     public void onInitializeClient() {
@@ -32,8 +33,14 @@ public class NicephoreClient implements ClientModInitializer {
                 GLFW.GLFW_KEY_C,
                 "nicephore.keybinds.category"
         ));
-        guiKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "nicephore.keybinds.gui",
+        guiScreenshotKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "nicephore.keybinds.screenshots.gui",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_S,
+                "nicephore.keybinds.category"
+        ));
+        guiGalleryKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "nicephore.keybinds.gallery.gui",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_G,
                 "nicephore.keybinds.category"
@@ -56,14 +63,22 @@ public class NicephoreClient implements ClientModInitializer {
                 }
             }
 
-            if (guiKeyBinding.wasPressed()){
+            if (guiScreenshotKeyBinding.wasPressed()){
                 if (ScreenshotScreen.canBeShow()){
                     MinecraftClient.getInstance().setScreen(new ScreenshotScreen());
                 }
                 else {
                     PlayerHelper.sendHotbarMessage(new TranslatableText("nicephore.screenshots.empty"));
                 }
+            }
 
+            if (guiGalleryKeyBinding.wasPressed()){
+                if (GalleryScreen.canBeShow()){
+                    MinecraftClient.getInstance().setScreen(new GalleryScreen());
+                }
+                else {
+                    PlayerHelper.sendHotbarMessage(new TranslatableText("nicephore.screenshots.empty"));
+                }
             }
         });
     }

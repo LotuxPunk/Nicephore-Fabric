@@ -94,6 +94,10 @@ public final class JPEGThread extends Thread {
             }
 
             CopyImageToClipBoard.setLastScreenshot(screenshot);
+           /* if (config.isScreenshotToClipboard()){
+                new CopyImageToClipBoard().copyLastScreenshot();
+                PlayerHelper.sendMessage(new TranslatableText("nicephore.clipboard.success"));
+            }*/
 
             final MutableText pngComponent = (new TranslatableText("nicephore.screenshot.png")).formatted(Formatting.UNDERLINE).styled((style)
                     -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, screenshot.getAbsolutePath())));
@@ -104,7 +108,6 @@ public final class JPEGThread extends Thread {
             final MutableText folderComponent = (new TranslatableText("nicephore.screenshot.folder")).formatted(Formatting.UNDERLINE).styled((style)
                     -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, screenshot.getParent())));
 
-            //PlayerHelper.sendMessage(new TranslatableText("nicephore.screenshot.success", screenshot.getName().replace(".png", "")));
 
             if (config.makeJPEGs()) {
                 PlayerHelper.sendMessage(new TranslatableText("nicephore.screenshot.options", pngComponent, jpgComponent, folderComponent));
@@ -112,7 +115,6 @@ public final class JPEGThread extends Thread {
                 PlayerHelper.sendMessage(new TranslatableText("nicephore.screenshot.reducedOptions", pngComponent, folderComponent));
             }
         } catch (IOException e) {
-//            Nicephore.LOGGER.error(e.getMessage());
             PlayerHelper.sendMessage(new TranslatableText("nicephore.screenshot.error"));
         }
     }

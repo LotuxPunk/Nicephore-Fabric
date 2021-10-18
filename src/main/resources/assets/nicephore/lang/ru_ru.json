@@ -21,7 +21,7 @@
   "nicephore.gui.delete.no": "Нет",
   "nicephore.screenshots.empty": "Папка снимков экрана пуста",
   "nicephore.keybinds.copy": "Копировать последний снимок",
-  "nicephore.keybinds.gui": "Открыть меню снимков экрана",
+  "nicephore.keybinds.screenshots.gui": "Открыть меню снимков экрана",
   "nicephore.screenshot.deleted.success": "%s успешно удалён.",
   "nicephore.screenshot.deleted.error": "Произошла ошибка в процессе удаления %s",
   "nicephore.keybinds.category": "Nicephore",

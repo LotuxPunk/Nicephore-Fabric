@@ -41,9 +41,15 @@ public class ScreenshotScreen extends Screen {
     private float aspectRatio;
     private final NicephoreConfig config;
 
+    public ScreenshotScreen(int index) {
+        super(TITLE);
+        this.index = index;
+        config = AutoConfig.getConfigHolder(NicephoreConfig.class).getConfig();
+    }
+
     public ScreenshotScreen() {
         super(TITLE);
-
+        index = getIndex();
         config = AutoConfig.getConfigHolder(NicephoreConfig.class).getConfig();
     }
 
