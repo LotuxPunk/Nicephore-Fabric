@@ -37,19 +37,20 @@ public class ScreenshotScreen extends Screen {
     private static final TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
     private static Identifier SCREENSHOT_TEXTURE;
     private ArrayList<File> screenshots;
-    private static int index;
+    private int index;
+    private int galleryIndex = -1;
     private float aspectRatio;
     private final NicephoreConfig config;
 
-    public ScreenshotScreen(int index) {
+    public ScreenshotScreen(int index, int galleryIndex) {
         super(TITLE);
         this.index = index;
+        this.galleryIndex = galleryIndex;
         config = AutoConfig.getConfigHolder(NicephoreConfig.class).getConfig();
     }
 
     public ScreenshotScreen() {
         super(TITLE);
-        index = getIndex();
         config = AutoConfig.getConfigHolder(NicephoreConfig.class).getConfig();
     }
 
@@ -181,5 +182,15 @@ public class ScreenshotScreen extends Screen {
             return MessageFormat.format("{0} MB", formatter.format((double) FileUtils.sizeOf(file) / MB_SIZE));
         }
         return MessageFormat.format("{0} KB", formatter.format((double) FileUtils.sizeOf(file) / KB_SIZE));
+    }
+
+    @Override
+    public void onClose() {
+        if (galleryIndex > -1){
+            MinecraftClient.getInstance().setScreen(new GalleryScreen(galleryIndex));
+        }
+        else {
+            super.onClose();
+        }
     }
 }

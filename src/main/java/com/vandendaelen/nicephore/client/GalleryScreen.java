@@ -34,7 +34,7 @@ public class GalleryScreen extends Screen {
     private static ArrayList<Identifier> SCREENSHOT_TEXTURES = new ArrayList<>();
     private ArrayList<File> screenshots;
     private ArrayList<List<File>> pagesOfScreenshots;
-    private static int index;
+    private int index;
     private float aspectRatio;
     private final NicephoreConfig config;
 
@@ -44,14 +44,18 @@ public class GalleryScreen extends Screen {
 
     public GalleryScreen() {
         super(TITLE);
+        config = AutoConfig.getConfigHolder(NicephoreConfig.class).getConfig();
+    }
 
+    public GalleryScreen(int index) {
+        super(TITLE);
+        this.index = index;
         config = AutoConfig.getConfigHolder(NicephoreConfig.class).getConfig();
     }
 
     @Override
     protected void init() {
         super.init();
-
 
         screenshots = (ArrayList<File>) Arrays.stream(SCREENSHOTS_DIR.listFiles(config.getFilter().getPredicate())).sorted(Comparator.comparingLong(File::lastModified).reversed()).collect(Collectors.toList());
         pagesOfScreenshots = (ArrayList<List<File>>) Util.batches(screenshots,IMAGES_TO_DISPLAY).collect(Collectors.toList());
@@ -176,7 +180,7 @@ public class GalleryScreen extends Screen {
     }
 
     private void openScreenshotScreen(int value){
-        MinecraftClient.getInstance().setScreen(new ScreenshotScreen(value));
+        MinecraftClient.getInstance().setScreen(new ScreenshotScreen(value, index));
     }
 
     private int getIndex(){

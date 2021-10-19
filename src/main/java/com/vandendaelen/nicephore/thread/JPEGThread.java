@@ -94,10 +94,10 @@ public final class JPEGThread extends Thread {
             }
 
             CopyImageToClipBoard.setLastScreenshot(screenshot);
-           /* if (config.isScreenshotToClipboard()){
+            if (config.isScreenshotToClipboard()){
                 new CopyImageToClipBoard().copyLastScreenshot();
                 PlayerHelper.sendMessage(new TranslatableText("nicephore.clipboard.success"));
-            }*/
+            }
 
             final MutableText pngComponent = (new TranslatableText("nicephore.screenshot.png")).formatted(Formatting.UNDERLINE).styled((style)
                     -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, screenshot.getAbsolutePath())));
