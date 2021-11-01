@@ -90,7 +90,7 @@ public class GalleryScreen extends Screen {
 
         if (!screenshots.isEmpty()) {
             this.addDrawableChild(new ButtonWidget(this.width / 2 - 80, this.height / 2 + 100, 20, 20, new LiteralText("<"), button -> modIndex(-1)));
-            this.addDrawableChild(new ButtonWidget(this.width / 2 + 50, this.height / 2 + 100, 20, 20, new LiteralText(">"), button -> modIndex(1)));
+            this.addDrawableChild(new ButtonWidget(this.width / 2 + 60, this.height / 2 + 100, 20, 20, new LiteralText(">"), button -> modIndex(1)));
         }
     }
 

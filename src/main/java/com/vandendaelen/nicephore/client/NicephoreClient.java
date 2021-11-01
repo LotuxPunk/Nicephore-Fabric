@@ -36,7 +36,7 @@ public class NicephoreClient implements ClientModInitializer {
         guiScreenshotKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "nicephore.keybinds.screenshots.gui",
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_S,
+                GLFW.GLFW_KEY_H,
                 "nicephore.keybinds.category"
         ));
         guiGalleryKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(

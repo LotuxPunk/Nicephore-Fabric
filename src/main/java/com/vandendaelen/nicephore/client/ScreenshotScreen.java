@@ -49,9 +49,12 @@ public class ScreenshotScreen extends Screen {
         config = AutoConfig.getConfigHolder(NicephoreConfig.class).getConfig();
     }
 
+    public ScreenshotScreen(int index) {
+        this(index, -1);
+    }
+
     public ScreenshotScreen() {
-        super(TITLE);
-        config = AutoConfig.getConfigHolder(NicephoreConfig.class).getConfig();
+        this(0, -1);
     }
 
     @Override
@@ -115,7 +118,7 @@ public class ScreenshotScreen extends Screen {
     }
 
     private void deleteScreenshot(File file) {
-        MinecraftClient.getInstance().setScreen(new DeleteConfirmScreen(file));
+        MinecraftClient.getInstance().setScreen(new DeleteConfirmScreen(file, index, galleryIndex));
     }
 
     @Override

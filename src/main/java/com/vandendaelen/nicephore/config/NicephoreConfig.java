@@ -13,10 +13,13 @@ public class NicephoreConfig implements ConfigData {
 
     @Comment("Enable to allow Nicephore to make lossy JPEGs of your screenshots for easier online sharing. Disable to only allow PNGs."
             + "\r\nNote that PNGs will still be made regardless of this option.")
-    boolean makeJPEGs = Util.getOS().equals(Util.OS.WINDOWS);
+    boolean makeJPEGs = false;
 
     @Comment("Automatically put newly made screenshots into your clipboard")
     boolean screenshotToClipboard = true;
+
+    @Comment("Display a custom message when a screenshot is made\nThis message show some option to open directly the different screenshots made or the folder.")
+    boolean screenshotCustomMessage = true;
 
     @Comment("JPEG compression level, the higher the number, the better the quality."
             + "\r\nNote that 1.0 is *not* lossless as JPEG is a lossy-only format, use the PNG files instead if you want lossless.")
@@ -25,7 +28,7 @@ public class NicephoreConfig implements ConfigData {
     @Comment("Enable to allow Nicephore to losslessly optimise the PNG and JPEG screenshots for smaller sized progressive files that are of identical quality to the files before optimisation." +
             "\r\nNote: Enabling this will cause screenshots to take slightly longer to save as an optimisation step will have to be run first." +
             "\r\nTip: In the rare case that a screenshot PNG is corrupted, run \"oxipng --fix (filename).png\" to attempt to fix it.")
-    boolean optimisedOutput = Util.getOS().equals(Util.OS.WINDOWS);
+    boolean optimisedOutput = false;
 
     @Comment("Only show the PNG, JPEG or JPEG/PNG on the screenshot GUI")
     ScreenshotFilter filter = ScreenshotFilter.BOTH;
@@ -68,5 +71,9 @@ public class NicephoreConfig implements ConfigData {
 
     public boolean isScreenshotToClipboard() {
         return screenshotToClipboard;
+    }
+
+    public boolean isScreenshotCustomMessage() {
+        return screenshotCustomMessage;
     }
 }

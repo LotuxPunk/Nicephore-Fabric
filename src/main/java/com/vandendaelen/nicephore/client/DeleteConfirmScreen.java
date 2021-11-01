@@ -13,10 +13,18 @@ import java.io.File;
 public class DeleteConfirmScreen extends Screen {
 
     private final File file;
+    private final int screenshotScreenIndex;
+    private final int galleryScreenIndex;
 
-    protected DeleteConfirmScreen(File file) {
+    protected DeleteConfirmScreen(File file, int screenshotScreenIndex, int galleryScreenIndex) {
         super(new TranslatableText("nicephore.gui.delete"));
         this.file = file;
+        this.screenshotScreenIndex = screenshotScreenIndex;
+        this.galleryScreenIndex = galleryScreenIndex;
+    }
+
+    protected DeleteConfirmScreen(File file, int screenshotScreenIndex){
+        this(file, screenshotScreenIndex, -1);
     }
 
     @Override
@@ -26,7 +34,7 @@ public class DeleteConfirmScreen extends Screen {
         this.children().clear();
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 35, this.height / 2 + 30, 30, 20, new TranslatableText("nicephore.gui.delete.yes"), button -> {
             deleteScreenshot();
-            MinecraftClient.getInstance().setScreen(new ScreenshotScreen());
+            MinecraftClient.getInstance().setScreen(new ScreenshotScreen(screenshotScreenIndex, galleryScreenIndex));
         }));
         this.addDrawableChild(new ButtonWidget(this.width / 2 + 5, this.height / 2 + 30, 30, 20, new TranslatableText("nicephore.gui.delete.no"), button -> MinecraftClient.getInstance().setScreen(new ScreenshotScreen())));
 
