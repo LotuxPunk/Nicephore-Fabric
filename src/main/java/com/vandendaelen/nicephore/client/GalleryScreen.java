@@ -9,11 +9,11 @@ import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.texture.TextureManager;
+import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;
@@ -30,8 +30,7 @@ import java.util.stream.Collectors;
 public class GalleryScreen extends Screen {
     private static final TranslatableText TITLE = new TranslatableText("nicephore.gui.screenshots");
     private static final File SCREENSHOTS_DIR = new File(MinecraftClient.getInstance().runDirectory, "screenshots");
-    private static final TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
-    private static ArrayList<Identifier> SCREENSHOT_TEXTURES = new ArrayList<>();
+    private static ArrayList<NativeImageBackedTexture> SCREENSHOT_TEXTURES = new ArrayList<>();
     private ArrayList<File> screenshots;
     private ArrayList<List<File>> pagesOfScreenshots;
     private int index;
@@ -73,7 +72,7 @@ public class GalleryScreen extends Screen {
                 e.printStackTrace();
             }
 
-            SCREENSHOT_TEXTURES.forEach(textureManager::destroyTexture);
+            SCREENSHOT_TEXTURES.forEach(NativeImageBackedTexture::close);
             SCREENSHOT_TEXTURES.clear();
 
             List <File> filesToLoad = pagesOfScreenshots.get(index);
@@ -84,16 +83,7 @@ public class GalleryScreen extends Screen {
                 return;
             }
         }
-
-        this.clearChildren();
-        this.addDrawableChild(new ButtonWidget(10, 10, 100, 20, new TranslatableText("nicephore.screenshot.filter", config.getFilter().name()), button -> changeFilter()));
-
-        if (!screenshots.isEmpty()) {
-            this.addDrawableChild(new ButtonWidget(this.width / 2 - 80, this.height / 2 + 100, 20, 20, new LiteralText("<"), button -> modIndex(-1)));
-            this.addDrawableChild(new ButtonWidget(this.width / 2 + 60, this.height / 2 + 100, 20, 20, new LiteralText(">"), button -> modIndex(1)));
-        }
     }
-
     private void changeFilter(){
         ScreenshotFilter nextFilter = config.getFilter().next();
         config.setFilter(nextFilter);
@@ -107,7 +97,15 @@ public class GalleryScreen extends Screen {
         final int imageHeight = (int) (imageWidth / aspectRatio);
 
         this.renderBackground(matrixStack);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+
+        this.clearChildren();
+        this.addDrawableChild(new ButtonWidget(10, 10, 100, 20, new TranslatableText("nicephore.screenshot.filter", config.getFilter().name()), button -> changeFilter()));
+        this.addDrawableChild(new ButtonWidget(this.width - 60, 10, 50, 20, new TranslatableText("nicephore.screenshot.exit"), button -> onClose()));
+
+        if (!screenshots.isEmpty()) {
+            this.addDrawableChild(new ButtonWidget(this.width / 2 - 80, this.height / 2 + 100, 20, 20, new LiteralText("<"), button -> modIndex(-1)));
+            this.addDrawableChild(new ButtonWidget(this.width / 2 + 60, this.height / 2 + 100, 20, 20, new LiteralText(">"), button -> modIndex(1)));
+        }
 
         if (pagesOfScreenshots.isEmpty()){
             drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.screenshots.empty"), centerX, 20, Color.RED.getRGB());
@@ -121,45 +119,27 @@ public class GalleryScreen extends Screen {
                 final String name = currentPage.get(imageIndex).getName();
                 final LiteralText text = new LiteralText(StringUtils.abbreviate(name, 13));
 
-                RenderSystem.setShaderTexture(0, TEXTURE);
+                int x = centerX - (15 - (imageIndex % 4) * 10) - (2 - (imageIndex % 4)) * imageWidth;
+                int y = 50 + (imageIndex / 4 * (imageHeight + 30));
 
-                switch (imageIndex) {
-                    case 0 -> {
-                        drawTexture(matrixStack, centerX - 15 - 2 * imageWidth, 50, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                        this.addDrawableChild(new ButtonWidget(centerX - 15 - 2 * imageWidth, 55 + imageHeight, imageWidth, 20, text, button -> openScreenshotScreen(screenshots.indexOf(currentPage.get(imageIndex)))));
-                    }
-                    case 1 -> {
-                        drawTexture(matrixStack, centerX - 5 - imageWidth, 50, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                        this.addDrawableChild(new ButtonWidget(centerX - 5 - imageWidth, 55 + imageHeight, imageWidth, 20, text, button -> openScreenshotScreen(screenshots.indexOf(currentPage.get(imageIndex)))));
-                    }
-                    case 2 -> {
-                        drawTexture(matrixStack, centerX + 5, 50, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                        this.addDrawableChild(new ButtonWidget(centerX + 5, 55 + imageHeight, imageWidth, 20, text, button -> openScreenshotScreen(screenshots.indexOf(currentPage.get(imageIndex)))));
-                    }
-                    case 3 -> {
-                        drawTexture(matrixStack, centerX + 15 + imageWidth, 50, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                        this.addDrawableChild(new ButtonWidget(centerX + 15 + imageWidth, 55 + imageHeight, imageWidth, 20, text, button -> openScreenshotScreen(screenshots.indexOf(currentPage.get(imageIndex)))));
-                    }
-                    case 4 -> {
-                        drawTexture(matrixStack, centerX - 15 - 2 * imageWidth, imageHeight + 80, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                        this.addDrawableChild(new ButtonWidget(centerX - 15 - 2 * imageWidth, 2 * imageHeight + 85, imageWidth, 20, text, button -> openScreenshotScreen(screenshots.indexOf(currentPage.get(imageIndex)))));
-                    }
-                    case 5 -> {
-                        drawTexture(matrixStack, centerX - 5 - imageWidth, imageHeight + 80, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                        this.addDrawableChild(new ButtonWidget(centerX - 5 - imageWidth, 2 * imageHeight + 85, imageWidth, 20, text, button -> openScreenshotScreen(screenshots.indexOf(currentPage.get(imageIndex)))));
-                    }
-                    case 6 -> {
-                        drawTexture(matrixStack, centerX + 5, imageHeight + 80, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                        this.addDrawableChild(new ButtonWidget(centerX + 5, 2 * imageHeight + 85, imageWidth, 20, text, button -> openScreenshotScreen(screenshots.indexOf(currentPage.get(imageIndex)))));
-                    }
-                    case 7 -> {
-                        drawTexture(matrixStack, centerX + 15 + imageWidth, imageHeight + 80, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                        this.addDrawableChild(new ButtonWidget(centerX + 15 + imageWidth, 2 * imageHeight + 85, imageWidth, 20, text, button -> openScreenshotScreen(screenshots.indexOf(currentPage.get(imageIndex)))));
-                    }
-                }
+                RenderSystem.setShaderTexture(0, TEXTURE.getGlId());
+                RenderSystem.enableBlend();
+                drawTexture(matrixStack, x, y, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+                RenderSystem.disableBlend();
+
+                drawExtensionBadge(matrixStack, FilenameUtils.getExtension(name), x - 10, y + 14);
+                this.addDrawableChild(new ButtonWidget(x, y + 5 + imageHeight, imageWidth, 20, text, button -> openScreenshotScreen(screenshots.indexOf(currentPage.get(imageIndex)))));
             });
 
-            drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.gui.gallery.pages", index + 1, pagesOfScreenshots.size()), centerX, this.height / 2 + 85, Color.WHITE.getRGB());
+            drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.gui.gallery.pages", index + 1, pagesOfScreenshots.size()), centerX, this.height / 2 + 105, Color.WHITE.getRGB());
+        }
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+    }
+
+    private void drawExtensionBadge(MatrixStack matrixStack, String extension, int x, int y) {
+        if (config.getFilter() == ScreenshotFilter.BOTH){
+            drawTextWithShadow(matrixStack, MinecraftClient.getInstance().textRenderer, new LiteralText(extension.toUpperCase()), x + 12, y - 12, Color.WHITE.getRGB());
+            //renderTooltip(matrixStack, new LiteralText(extension.toUpperCase()), x, y);
         }
     }
 
@@ -191,6 +171,9 @@ public class GalleryScreen extends Screen {
     }
 
     private void closeScreen(String textComponentId) {
+        SCREENSHOT_TEXTURES.forEach(NativeImageBackedTexture::close);
+        SCREENSHOT_TEXTURES.clear();
+
         this.onClose();
         PlayerHelper.sendHotbarMessage(new TranslatableText(textComponentId));
     }

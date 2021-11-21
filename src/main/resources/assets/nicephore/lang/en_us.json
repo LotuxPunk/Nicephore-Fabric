@@ -1,5 +1,6 @@
 {
   "nicephore.screenshot.filter":"Filter: %s",
+  "nicephore.screenshot.exit":"Exit",
   "nicephore.screenshot.success":"Screenshot saved: %s",
   "nicephore.screenshot.error":"Screenshot failed",
   "nicephore.screenshot.png":"Show PNG",

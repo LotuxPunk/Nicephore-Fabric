@@ -10,18 +10,16 @@ import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.texture.TextureManager;
+import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
 import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
@@ -34,8 +32,7 @@ import java.util.stream.Collectors;
 public class ScreenshotScreen extends Screen {
     private static final TranslatableText TITLE = new TranslatableText("nicephore.gui.screenshots");
     private static final File SCREENSHOTS_DIR = new File(MinecraftClient.getInstance().runDirectory, "screenshots");
-    private static final TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
-    private static Identifier SCREENSHOT_TEXTURE;
+    private static NativeImageBackedTexture SCREENSHOT_TEXTURE;
     private ArrayList<File> screenshots;
     private int index;
     private int galleryIndex = -1;
@@ -77,7 +74,9 @@ public class ScreenshotScreen extends Screen {
                 e.printStackTrace();
             }
 
-            textureManager.destroyTexture(SCREENSHOT_TEXTURE);
+            if (SCREENSHOT_TEXTURE != null){
+                SCREENSHOT_TEXTURE.close();
+            }
 
             File fileToLoad = screenshots.get(index);
             if (fileToLoad.exists()) {
@@ -86,23 +85,6 @@ public class ScreenshotScreen extends Screen {
                 closeScreen("nicephore.screenshots.loading.error");
                 return;
             }
-        }
-
-        this.clearChildren();
-        this.addDrawableChild(new ButtonWidget(10, 10, 100, 20, new TranslatableText("nicephore.screenshot.filter", config.getFilter().name()), button -> changeFilter()));
-
-        if (!screenshots.isEmpty()) {
-            this.addDrawableChild(new ButtonWidget(this.width / 2 + 50, this.height / 2 + 75, 20, 20, new LiteralText(">"), button -> modIndex(1)));
-            this.addDrawableChild(new ButtonWidget(this.width / 2 - 80, this.height / 2 + 75, 20, 20, new LiteralText("<"), button -> modIndex(-1)));
-            this.addDrawableChild(new ButtonWidget(this.width / 2 - 55, this.height / 2 + 75, 50, 20, new TranslatableText("nicephore.gui.screenshots.copy"), button -> {
-                final CopyImageToClipBoard imageToClipBoard = new CopyImageToClipBoard();
-                try {
-                    imageToClipBoard.copyImage(ImageIO.read(screenshots.get(index)));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }));
-            this.addDrawableChild(new ButtonWidget(this.width / 2 - 5, this.height / 2 + 75, 50, 20, new TranslatableText("nicephore.gui.screenshots.delete"), button -> deleteScreenshot(screenshots.get(index))));
         }
     }
 
@@ -113,6 +95,10 @@ public class ScreenshotScreen extends Screen {
     }
 
     private void closeScreen(String textComponentId) {
+        if (SCREENSHOT_TEXTURE != null){
+            SCREENSHOT_TEXTURE.close();
+        }
+
         this.onClose();
         PlayerHelper.sendHotbarMessage(new TranslatableText(textComponentId));
     }
@@ -128,7 +114,24 @@ public class ScreenshotScreen extends Screen {
         int height = (int)(width / aspectRatio);
 
         this.renderBackground(matrixStack);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+
+        this.clearChildren();
+        this.addDrawableChild(new ButtonWidget(10, 10, 100, 20, new TranslatableText("nicephore.screenshot.filter", config.getFilter().name()), button -> changeFilter()));
+        this.addDrawableChild(new ButtonWidget(this.width - 60, 10, 50, 20, new TranslatableText("nicephore.screenshot.exit"), button -> onClose()));
+
+        if (!screenshots.isEmpty()) {
+            this.addDrawableChild(new ButtonWidget(this.width / 2 + 60, this.height / 2 + 75, 20, 20, new LiteralText(">"), button -> modIndex(1)));
+            this.addDrawableChild(new ButtonWidget(this.width / 2 - 80, this.height / 2 + 75, 20, 20, new LiteralText("<"), button -> modIndex(-1)));
+            this.addDrawableChild(new ButtonWidget(this.width / 2 - 52, this.height / 2 + 75, 50, 20, new TranslatableText("nicephore.gui.screenshots.copy"), button -> {
+                final CopyImageToClipBoard imageToClipBoard = new CopyImageToClipBoard();
+                try {
+                    imageToClipBoard.copyImage(ImageIO.read(screenshots.get(index)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }));
+            this.addDrawableChild(new ButtonWidget(this.width / 2 + 3, this.height / 2 + 75, 50, 20, new TranslatableText("nicephore.gui.screenshots.delete"), button -> deleteScreenshot(screenshots.get(index))));
+        }
 
         if (screenshots.isEmpty()){
             drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.screenshots.empty"), centerX, 20, Color.RED.getRGB());
@@ -137,8 +140,10 @@ public class ScreenshotScreen extends Screen {
 
         final File currentScreenshot = screenshots.get(index);
         if (currentScreenshot.exists()) {
-            RenderSystem.setShaderTexture(0, SCREENSHOT_TEXTURE);
+            RenderSystem.setShaderTexture(0, SCREENSHOT_TEXTURE.getGlId());
+            RenderSystem.enableBlend();
             drawTexture(matrixStack, centerX - width / 2, 50, 0, 0, width, height, width, height);
+            RenderSystem.disableBlend();
 
             drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.gui.screenshots.pages", index + 1, screenshots.size()), centerX, 20, Color.WHITE.getRGB());
             drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new LiteralText(MessageFormat.format("{0} ({1})", currentScreenshot.getName(), getFileSizeMegaBytes(currentScreenshot))), centerX, 35, Color.WHITE.getRGB());
@@ -146,6 +151,7 @@ public class ScreenshotScreen extends Screen {
         else {
             closeScreen("nicephore.screenshots.loading.error");
         }
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     private void modIndex(int value){

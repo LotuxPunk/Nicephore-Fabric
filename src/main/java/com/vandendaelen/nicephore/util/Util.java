@@ -36,14 +36,14 @@ public class Util {
         return os;
     }
 
-    public static Identifier fileToTexture(File file) {
+    public static NativeImageBackedTexture fileToTexture(File file) {
         NativeImage nativeImage = null;
         try {
             nativeImage = NativeImage.read(new FileInputStream(file));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return MinecraftClient.getInstance().getTextureManager().registerDynamicTexture("file_" + System.currentTimeMillis(), new NativeImageBackedTexture(nativeImage));
+        return new NativeImageBackedTexture(nativeImage);
     }
 
     public static <T> Stream<List<T>> batches(List<T> source, int length) {
