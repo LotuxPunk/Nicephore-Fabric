@@ -28,5 +28,6 @@
   "nicephore.screenshot.deleted.error": "Erreur a la supression de %s",
   "nicephore.keybinds.category": "Nicephore",
   "nicephore.screenshots.loading.error": "Une erreur s'est produite à l'ouverture d'un fichier",
-  "nicephore.gui.gallery.pages": "Page %s sur %s"
+  "nicephore.gui.gallery.pages": "Page %s sur %s",
+  "nicephore.gui.screenshots.copy.unable": "Le button \"Copier\" à été désactivé car votre système n'autorise pas l'accès au presse-papier"
 }

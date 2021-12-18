@@ -3,6 +3,7 @@ package com.vandendaelen.nicephore.client.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.vandendaelen.nicephore.config.NicephoreConfig;
 import com.vandendaelen.nicephore.helper.PlayerHelper;
+import com.vandendaelen.nicephore.util.FilterListener;
 import com.vandendaelen.nicephore.util.ScreenshotFilter;
 import com.vandendaelen.nicephore.util.Util;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -17,17 +18,19 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GalleryScreen extends Screen {
+public class GalleryScreen extends Screen implements FilterListener {
     private static final TranslatableText TITLE = new TranslatableText("nicephore.gui.screenshots");
     private static final File SCREENSHOTS_DIR = new File(MinecraftClient.getInstance().runDirectory, "screenshots");
     private static ArrayList<NativeImageBackedTexture> SCREENSHOT_TEXTURES = new ArrayList<>();
@@ -62,12 +65,17 @@ public class GalleryScreen extends Screen {
         aspectRatio = 1.7777F;
 
         if (!screenshots.isEmpty()) {
-            try {
-                BufferedImage bimg = ImageIO.read(screenshots.get(index));
-                final int width = bimg.getWidth();
-                final int height = bimg.getHeight();
-                bimg.getGraphics().dispose();
-                aspectRatio = (float) (width / (double) height);
+            try(ImageInputStream in = ImageIO.createImageInputStream(screenshots.get(index))){
+                final Iterator<ImageReader> readers = ImageIO.getImageReaders(in);
+                if (readers.hasNext()) {
+                    ImageReader reader = readers.next();
+                    try {
+                        reader.setInput(in);
+                        aspectRatio = reader.getWidth(0)/ (float) reader.getHeight(0);
+                    } finally {
+                        reader.dispose();
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -109,37 +117,37 @@ public class GalleryScreen extends Screen {
 
         if (pagesOfScreenshots.isEmpty()){
             drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.screenshots.empty"), centerX, 20, Color.RED.getRGB());
-            return;
+        }
+        else {
+            final List<File> currentPage = pagesOfScreenshots.get(index);
+            if (currentPage.stream().allMatch(File::exists)){
+                SCREENSHOT_TEXTURES.forEach(TEXTURE -> {
+                    final int imageIndex = SCREENSHOT_TEXTURES.indexOf(TEXTURE);
+                    final String name = currentPage.get(imageIndex).getName();
+                    final LiteralText text = new LiteralText(StringUtils.abbreviate(name, 13));
+
+                    int x = centerX - (15 - (imageIndex % 4) * 10) - (2 - (imageIndex % 4)) * imageWidth;
+                    int y = 50 + (imageIndex / 4 * (imageHeight + 30));
+
+                    RenderSystem.setShaderTexture(0, TEXTURE.getGlId());
+                    RenderSystem.enableBlend();
+                    drawTexture(matrixStack, x, y, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+                    RenderSystem.disableBlend();
+
+                    drawExtensionBadge(matrixStack, FilenameUtils.getExtension(name), x - 10, y + 14);
+                    this.addDrawableChild(new ButtonWidget(x, y + 5 + imageHeight, imageWidth, 20, text, button -> openScreenshotScreen(screenshots.indexOf(currentPage.get(imageIndex)))));
+                });
+
+                drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.gui.gallery.pages", index + 1, pagesOfScreenshots.size()), centerX, this.height / 2 + 105, Color.WHITE.getRGB());
+            }
         }
 
-        final List<File> currentPage = pagesOfScreenshots.get(index);
-        if (currentPage.stream().allMatch(File::exists)){
-            SCREENSHOT_TEXTURES.forEach(TEXTURE -> {
-                final int imageIndex = SCREENSHOT_TEXTURES.indexOf(TEXTURE);
-                final String name = currentPage.get(imageIndex).getName();
-                final LiteralText text = new LiteralText(StringUtils.abbreviate(name, 13));
-
-                int x = centerX - (15 - (imageIndex % 4) * 10) - (2 - (imageIndex % 4)) * imageWidth;
-                int y = 50 + (imageIndex / 4 * (imageHeight + 30));
-
-                RenderSystem.setShaderTexture(0, TEXTURE.getGlId());
-                RenderSystem.enableBlend();
-                drawTexture(matrixStack, x, y, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                RenderSystem.disableBlend();
-
-                drawExtensionBadge(matrixStack, FilenameUtils.getExtension(name), x - 10, y + 14);
-                this.addDrawableChild(new ButtonWidget(x, y + 5 + imageHeight, imageWidth, 20, text, button -> openScreenshotScreen(screenshots.indexOf(currentPage.get(imageIndex)))));
-            });
-
-            drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.gui.gallery.pages", index + 1, pagesOfScreenshots.size()), centerX, this.height / 2 + 105, Color.WHITE.getRGB());
-        }
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     private void drawExtensionBadge(MatrixStack matrixStack, String extension, int x, int y) {
         if (config.getFilter() == ScreenshotFilter.BOTH){
             drawTextWithShadow(matrixStack, MinecraftClient.getInstance().textRenderer, new LiteralText(extension.toUpperCase()), x + 12, y - 12, Color.WHITE.getRGB());
-            //renderTooltip(matrixStack, new LiteralText(extension.toUpperCase()), x, y);
         }
     }
 
@@ -160,7 +168,7 @@ public class GalleryScreen extends Screen {
     }
 
     private void openScreenshotScreen(int value){
-        MinecraftClient.getInstance().setScreen(new ScreenshotScreen(value, index));
+        MinecraftClient.getInstance().setScreen(new ScreenshotScreen(value, index, this));
     }
 
     private int getIndex(){
@@ -171,14 +179,24 @@ public class GalleryScreen extends Screen {
     }
 
     private void closeScreen(String textComponentId) {
-        SCREENSHOT_TEXTURES.forEach(NativeImageBackedTexture::close);
-        SCREENSHOT_TEXTURES.clear();
-
         this.onClose();
         PlayerHelper.sendHotbarMessage(new TranslatableText(textComponentId));
     }
 
     public static boolean canBeShow(){
         return SCREENSHOTS_DIR.exists() && SCREENSHOTS_DIR.list().length > 0;
+    }
+
+    @Override
+    public void onClose() {
+        SCREENSHOT_TEXTURES.forEach(NativeImageBackedTexture::close);
+        SCREENSHOT_TEXTURES.clear();
+
+        super.onClose();
+    }
+
+    @Override
+    public void onFilterChange(ScreenshotFilter filter) {
+        changeFilter();
     }
 }

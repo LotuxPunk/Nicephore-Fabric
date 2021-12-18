@@ -32,7 +32,7 @@ public class ScreenshotUtils {
         } else {
             screenshotFile = new File(screenshotsDir, fileName);
         }
-        CopyImageToClipBoard.setLastScreenshot(screenshotFile);
+        CopyImageToClipBoard.getInstance().setLastScreenshot(screenshotFile);
 
         final JPEGThread thread = new JPEGThread(image, screenshotFile);
         thread.start();
