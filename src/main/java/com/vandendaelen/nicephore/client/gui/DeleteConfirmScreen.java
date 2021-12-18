@@ -1,4 +1,4 @@
-package com.vandendaelen.nicephore.client;
+package com.vandendaelen.nicephore.client.gui;
 
 import com.vandendaelen.nicephore.helper.PlayerHelper;
 import net.minecraft.client.MinecraftClient;

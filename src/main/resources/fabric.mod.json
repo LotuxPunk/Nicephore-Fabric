@@ -16,7 +16,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "com.vandendaelen.nicephore.client.NicephoreClient"
+      "com.vandendaelen.nicephore.client.event.NicephoreClient"
     ],
     "main": [
       "com.vandendaelen.nicephore.Nicephore"

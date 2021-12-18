@@ -1,5 +1,7 @@
-package com.vandendaelen.nicephore.client;
+package com.vandendaelen.nicephore.client.event;
 
+import com.vandendaelen.nicephore.client.gui.GalleryScreen;
+import com.vandendaelen.nicephore.client.gui.ScreenshotScreen;
 import com.vandendaelen.nicephore.helper.PlayerHelper;
 import com.vandendaelen.nicephore.thread.InitThread;
 import com.vandendaelen.nicephore.util.CopyImageToClipBoard;

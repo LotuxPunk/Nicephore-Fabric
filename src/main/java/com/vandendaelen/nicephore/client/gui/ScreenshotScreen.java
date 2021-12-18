@@ -1,4 +1,4 @@
-package com.vandendaelen.nicephore.client;
+package com.vandendaelen.nicephore.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.vandendaelen.nicephore.config.NicephoreConfig;
