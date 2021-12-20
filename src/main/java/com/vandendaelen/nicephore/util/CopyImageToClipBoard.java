@@ -31,9 +31,15 @@ public class CopyImageToClipBoard implements ClipboardOwner {
 
     public boolean copyImage(BufferedImage bi) {
         if (!MinecraftClient.IS_SYSTEM_MAC && Objects.equals(System.getProperty("java.awt.headless"), "false")){
-            final TransferableImage trans = new TransferableImage(bi);
-            final Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
-            c.setContents( trans, this );
+            try {
+                final TransferableImage trans = new TransferableImage(bi);
+                final Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+                c.setContents( trans, this );
+            } catch (HeadlessException e) {
+                e.printStackTrace();
+                return false;
+            }
+
             return true;
         }
         return false;
@@ -50,15 +56,10 @@ public class CopyImageToClipBoard implements ClipboardOwner {
         System.out.println( "Lost Clipboard Ownership" );
     }
 
-    private class TransferableImage implements Transferable {
+    private record TransferableImage(Image i) implements Transferable {
 
-        final Image i;
-        public TransferableImage( Image i ) {
-            this.i = i;
-        }
-
-        public Object getTransferData( DataFlavor flavor ) throws UnsupportedFlavorException, IOException {
-            if ( flavor.equals( DataFlavor.imageFlavor ) && i != null ) {
+        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+            if (flavor.equals(DataFlavor.imageFlavor) && i != null) {
                 return i;
             } else {
                 throw new UnsupportedFlavorException(flavor);
@@ -66,15 +67,15 @@ public class CopyImageToClipBoard implements ClipboardOwner {
         }
 
         public DataFlavor[] getTransferDataFlavors() {
-            DataFlavor[] flavors = new DataFlavor[ 1 ];
-            flavors[ 0 ] = DataFlavor.imageFlavor;
+            DataFlavor[] flavors = new DataFlavor[1];
+            flavors[0] = DataFlavor.imageFlavor;
             return flavors;
         }
 
-        public boolean isDataFlavorSupported( DataFlavor flavor ) {
+        public boolean isDataFlavorSupported(DataFlavor flavor) {
             DataFlavor[] flavors = getTransferDataFlavors();
-            for ( DataFlavor dataFlavor : flavors ) {
-                if ( flavor.equals(dataFlavor) ) {
+            for (DataFlavor dataFlavor : flavors) {
+                if (flavor.equals(dataFlavor)) {
                     return true;
                 }
             }
