@@ -58,20 +58,18 @@ public class NicephoreClient implements ClientModInitializer {
                 }
             }
 
-            if (guiScreenshotKeyBinding.wasPressed()){
-                if (ScreenshotScreen.canBeShow()){
+            if (guiScreenshotKeyBinding.wasPressed()) {
+                if (ScreenshotScreen.canBeShow()) {
                     MinecraftClient.getInstance().setScreen(new ScreenshotScreen());
-                }
-                else {
+                } else {
                     PlayerHelper.sendHotbarMessage(new TranslatableText("nicephore.screenshots.empty"));
                 }
             }
 
-            if (guiGalleryKeyBinding.wasPressed()){
-                if (GalleryScreen.canBeShow()){
+            if (guiGalleryKeyBinding.wasPressed()) {
+                if (GalleryScreen.canBeShow()) {
                     MinecraftClient.getInstance().setScreen(new GalleryScreen());
-                }
-                else {
+                } else {
                     PlayerHelper.sendHotbarMessage(new TranslatableText("nicephore.screenshots.empty"));
                 }
             }

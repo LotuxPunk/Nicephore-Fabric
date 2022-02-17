@@ -38,8 +38,9 @@ public class ScreenshotUtils {
     public static NativeImage takeScreenshot(Framebuffer framebuffer) {
         throw new IllegalStateException("Mixin failed to shadow takeScreenshot()");
     }
+
     @Shadow
-    private static File getScreenshotFilename(File directory){
+    private static File getScreenshotFilename(File directory) {
         throw new IllegalStateException("Mixin failed to shadow getScreenshotFilename()");
     }
 }

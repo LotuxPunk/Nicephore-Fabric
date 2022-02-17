@@ -26,6 +26,58 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public final class InitThread extends Thread {
+    private static void downloadAndExtract(String url, File zip) {
+        try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
+             FileOutputStream fileOutputStream = new FileOutputStream(zip)) {
+            byte[] dataBuffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                fileOutputStream.write(dataBuffer, 0, bytesRead);
+            }
+
+            unzip(zip.getAbsolutePath(), DESTINATION.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void unzip(String zipFilePath, String destDir) {
+        final File dir = new File(destDir);
+        // create output directory if it doesn't exist
+        if (!dir.exists()) dir.mkdirs();
+        final FileInputStream fis;
+        //buffer for read and write data to file
+        byte[] buffer = new byte[1024];
+        try {
+            fis = new FileInputStream(zipFilePath);
+            ZipInputStream zis = new ZipInputStream(fis);
+            ZipEntry ze = zis.getNextEntry();
+            while (ze != null) {
+                String fileName = ze.getName();
+                File newFile = new File(destDir + File.separator + fileName);
+                System.out.println("Unzipping to " + newFile.getAbsolutePath());
+                //create directories for sub directories in zip
+                new File(newFile.getParent()).mkdirs();
+                final FileOutputStream fos = new FileOutputStream(newFile);
+                int len;
+                while ((len = zis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, len);
+                }
+                fos.close();
+                //close this ZipEntry
+                zis.closeEntry();
+                ze = zis.getNextEntry();
+            }
+            //close last ZipEntry
+            zis.closeEntry();
+            zis.close();
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private static final File
             DESTINATION = new File(MinecraftClient.getInstance().runDirectory.getAbsolutePath(), String.format("mods%snicephore", File.separator)),
             REFERENCES_JSON = new File(DESTINATION, String.format("%sreferences.json", File.separator)),
@@ -77,71 +129,25 @@ public final class InitThread extends Thread {
                         e.printStackTrace();
                     }
                 }
-            }
-            else{
+            } else {
                 freshInstall();
             }
         }
 
     }
 
-    private static void downloadAndExtract(String url, File zip){
-        try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
-             FileOutputStream fileOutputStream = new FileOutputStream(zip)) {
-            byte[] dataBuffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-                fileOutputStream.write(dataBuffer, 0, bytesRead);
-            }
-
-            unzip(zip.getAbsolutePath(), DESTINATION.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void unzip(String zipFilePath, String destDir) {
-        final File dir = new File(destDir);
-        // create output directory if it doesn't exist
-        if (!dir.exists()) dir.mkdirs();
-        final FileInputStream fis;
-        //buffer for read and write data to file
-        byte[] buffer = new byte[1024];
-        try {
-            fis = new FileInputStream(zipFilePath);
-            ZipInputStream zis = new ZipInputStream(fis);
-            ZipEntry ze = zis.getNextEntry();
-            while(ze != null){
-                String fileName = ze.getName();
-                File newFile = new File(destDir + File.separator + fileName);
-                System.out.println("Unzipping to "+newFile.getAbsolutePath());
-                //create directories for sub directories in zip
-                new File(newFile.getParent()).mkdirs();
-                final FileOutputStream fos = new FileOutputStream(newFile);
-                int len;
-                while ((len = zis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, len);
-                }
-                fos.close();
-                //close this ZipEntry
-                zis.closeEntry();
-                ze = zis.getNextEntry();
-            }
-            //close last ZipEntry
-            zis.closeEntry();
-            zis.close();
-            fis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
     private Optional<Response> getResponse(final JsonReader reader) {
         final Gson gson = new Gson();
-        final Type collectionType = new TypeToken<Collection<Response>>() {}.getType();
+        final Type collectionType = new TypeToken<Collection<Response>>() {
+        }.getType();
         final Collection<Response> responses = gson.fromJson(reader, collectionType);
         return responses.stream().filter(response1 -> response1.platform.equals(OperatingSystems.getOS().name())).findFirst();
+    }
+
+    static class Response {
+        String platform;
+        String oxipng, oxipng_file, oxipng_command, oxipng_version;
+        String ect, ect_file, ect_command, ect_version;
     }
 
     private JsonReader getJsonReader(String URL, final File file) throws IOException {
@@ -174,9 +180,5 @@ public final class InitThread extends Thread {
         }
     }
 
-    static class Response{
-        String platform;
-        String oxipng, oxipng_file, oxipng_command, oxipng_version;
-        String ect, ect_file, ect_command, ect_version;
-    }
+
 }

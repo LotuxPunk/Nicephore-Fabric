@@ -41,8 +41,8 @@ public class CopyImageToClipBoard implements ClipboardOwner {
         return false;
     }
 
-    public void lostOwnership( Clipboard clip, Transferable trans ) {
-        System.out.println( "Lost Clipboard Ownership" );
+    public void lostOwnership(Clipboard clip, Transferable trans) {
+        System.out.println("Lost Clipboard Ownership");
     }
 
     private record TransferableImage(Image i) implements Transferable {

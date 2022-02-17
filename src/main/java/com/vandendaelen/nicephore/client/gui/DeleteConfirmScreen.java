@@ -23,7 +23,7 @@ public class DeleteConfirmScreen extends Screen {
         this.galleryScreenIndex = galleryScreenIndex;
     }
 
-    protected DeleteConfirmScreen(File file, int screenshotScreenIndex){
+    protected DeleteConfirmScreen(File file, int screenshotScreenIndex) {
         this(file, screenshotScreenIndex, -1);
     }
 
@@ -48,11 +48,10 @@ public class DeleteConfirmScreen extends Screen {
         drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.gui.delete.question", file.getName()).getString(), this.width / 2, this.height / 2 - 20, Color.RED.getRGB());
     }
 
-    private void deleteScreenshot(){
-        if (this.file.exists() && this.file.delete()){
+    private void deleteScreenshot() {
+        if (this.file.exists() && this.file.delete()) {
             PlayerHelper.sendMessage(new TranslatableText("nicephore.screenshot.deleted.success", file.getName()));
-        }
-        else{
+        } else {
             PlayerHelper.sendMessage(new TranslatableText("nicephore.screenshot.deleted.error", file.getName()));
         }
     }

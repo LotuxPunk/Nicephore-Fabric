@@ -43,7 +43,7 @@ public class Util {
     private static Dimension getImageDimensions(Object input) throws IOException {
 
         try (ImageInputStream stream = ImageIO.createImageInputStream(input)) { // accepts File, InputStream, RandomAccessFile
-            if(stream != null) {
+            if (stream != null) {
                 IIORegistry iioRegistry = IIORegistry.getDefaultInstance();
                 Iterator<ImageReaderSpi> iter = iioRegistry.getServiceProviders(ImageReaderSpi.class, true);
                 while (iter.hasNext()) {
