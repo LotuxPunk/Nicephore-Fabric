@@ -27,6 +27,7 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
     include "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
+    implementation 'com.profesorfalken:jPowerShell:3.1.1'
 }
 
 processResources {
