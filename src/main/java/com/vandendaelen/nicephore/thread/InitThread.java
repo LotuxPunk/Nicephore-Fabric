@@ -4,13 +4,19 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.vandendaelen.nicephore.config.NicephoreConfig;
+import com.vandendaelen.nicephore.enums.OperatingSystems;
 import com.vandendaelen.nicephore.util.Reference;
-import com.vandendaelen.nicephore.util.Util;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.MinecraftClient;
 import org.apache.commons.io.FileUtils;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.file.Files;
@@ -82,7 +88,7 @@ public final class InitThread extends Thread {
     private static void downloadAndExtract(String url, File zip){
         try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
              FileOutputStream fileOutputStream = new FileOutputStream(zip)) {
-            byte dataBuffer[] = new byte[1024];
+            byte[] dataBuffer = new byte[1024];
             int bytesRead;
             while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
                 fileOutputStream.write(dataBuffer, 0, bytesRead);
@@ -135,8 +141,7 @@ public final class InitThread extends Thread {
         final Gson gson = new Gson();
         final Type collectionType = new TypeToken<Collection<Response>>() {}.getType();
         final Collection<Response> responses = gson.fromJson(reader, collectionType);
-        final Optional<Response> response = responses.stream().filter(response1 -> response1.platform.equals(Util.getOS().name())).findFirst();
-        return response;
+        return responses.stream().filter(response1 -> response1.platform.equals(OperatingSystems.getOS().name())).findFirst();
     }
 
     private JsonReader getJsonReader(String URL, final File file) throws IOException {
@@ -148,7 +153,7 @@ public final class InitThread extends Thread {
         return new JsonReader(new FileReader(file));
     }
 
-    private final void freshInstall() {
+    private void freshInstall() {
         try {
             Files.createDirectory(DESTINATION.toPath());
             final Optional<Response> response = getResponse(getJsonReader(Reference.DOWNLOADS_URLS, REFERENCES_JSON));

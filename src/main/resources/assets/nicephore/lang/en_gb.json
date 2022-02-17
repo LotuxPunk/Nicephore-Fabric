@@ -1,6 +1,6 @@
 {
-  "nicephore.clipboard.error": "Error when trying to copy the last screenshot",
-  "nicephore.clipboard.success": "Last screenshot copied in the clipboard",
+  "nicephore.clipboard.error": "Error when trying to copy the screenshot",
+  "nicephore.clipboard.success": "Screenshot copied in the clipboard",
   "nicephore.gui.delete": "Delete a screenshot?",
   "nicephore.gui.delete.no": "No",
   "nicephore.gui.delete.question": "Do you really want to remove the screenshot %s?",

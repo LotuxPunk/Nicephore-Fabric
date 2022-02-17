@@ -1,7 +1,6 @@
-package com.vandendaelen.nicephore.util;
+package com.vandendaelen.nicephore.enums;
 
 import java.io.FilenameFilter;
-import java.util.function.Predicate;
 
 public enum ScreenshotFilter {
     JPEG((dir, name) -> name.endsWith(".jpg")),

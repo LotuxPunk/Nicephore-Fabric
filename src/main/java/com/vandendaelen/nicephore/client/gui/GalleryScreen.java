@@ -2,9 +2,9 @@ package com.vandendaelen.nicephore.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.vandendaelen.nicephore.config.NicephoreConfig;
+import com.vandendaelen.nicephore.enums.ScreenshotFilter;
 import com.vandendaelen.nicephore.helper.PlayerHelper;
 import com.vandendaelen.nicephore.util.FilterListener;
-import com.vandendaelen.nicephore.util.ScreenshotFilter;
 import com.vandendaelen.nicephore.util.Util;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.MinecraftClient;

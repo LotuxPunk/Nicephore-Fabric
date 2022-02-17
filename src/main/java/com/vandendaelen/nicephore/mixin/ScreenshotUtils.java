@@ -15,6 +15,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 @Mixin(net.minecraft.client.util.ScreenshotRecorder.class)
@@ -26,12 +27,7 @@ public class ScreenshotUtils {
         final NativeImage image = takeScreenshot(framebuffer);
         final File screenshotsDir = new File(gameDirectory, "screenshots");
 
-        File screenshotFile = null;
-        if (fileName == null) {
-            screenshotFile = new File(screenshotsDir, DATE_FORMAT.format(new Date()) + ".png");
-        } else {
-            screenshotFile = new File(screenshotsDir, fileName);
-        }
+        File screenshotFile = new File(screenshotsDir, Objects.requireNonNullElseGet(fileName, () -> DATE_FORMAT.format(new Date()) + ".png"));
         CopyImageToClipBoard.getInstance().setLastScreenshot(screenshotFile);
 
         final JPEGThread thread = new JPEGThread(image, screenshotFile);

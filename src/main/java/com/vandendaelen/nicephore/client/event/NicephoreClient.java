@@ -17,8 +17,6 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.TranslatableText;
 import org.lwjgl.glfw.GLFW;
 
-import java.io.IOException;
-
 @Environment(EnvType.CLIENT)
 public class NicephoreClient implements ClientModInitializer {
     private static KeyBinding copyKeyBinding;
@@ -27,8 +25,6 @@ public class NicephoreClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        System.setProperty("java.awt.headless", "false");
-
         copyKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "nicephore.keybinds.copy",
                 InputUtil.Type.KEYSYM,
@@ -55,13 +51,10 @@ public class NicephoreClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (copyKeyBinding.wasPressed()) {
-                final CopyImageToClipBoard imageToClipBoard = new CopyImageToClipBoard();
-                try {
-                    imageToClipBoard.copyLastScreenshot();
+                if (CopyImageToClipBoard.getInstance().copyLastScreenshot()) {
                     PlayerHelper.sendMessage(new TranslatableText("nicephore.clipboard.success"));
-                } catch (IOException e) {
+                } else {
                     PlayerHelper.sendMessage(new TranslatableText("nicephore.clipboard.error"));
-                    e.printStackTrace();
                 }
             }
 

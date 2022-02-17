@@ -2,10 +2,11 @@ package com.vandendaelen.nicephore.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.vandendaelen.nicephore.config.NicephoreConfig;
+import com.vandendaelen.nicephore.enums.OperatingSystems;
+import com.vandendaelen.nicephore.enums.ScreenshotFilter;
 import com.vandendaelen.nicephore.helper.PlayerHelper;
 import com.vandendaelen.nicephore.util.CopyImageToClipBoard;
 import com.vandendaelen.nicephore.util.FilterListener;
-import com.vandendaelen.nicephore.util.ScreenshotFilter;
 import com.vandendaelen.nicephore.util.Util;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.MinecraftClient;
@@ -31,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ScreenshotScreen extends Screen {
@@ -135,17 +135,14 @@ public class ScreenshotScreen extends Screen {
             this.addDrawableChild(new ButtonWidget(this.width / 2 + 60, this.height / 2 + 75, 20, 20, new LiteralText(">"), button -> modIndex(1)));
             this.addDrawableChild(new ButtonWidget(this.width / 2 - 80, this.height / 2 + 75, 20, 20, new LiteralText("<"), button -> modIndex(-1)));
             ButtonWidget copyButton = new ButtonWidget(this.width / 2 - 52, this.height / 2 + 75, 50, 20, new TranslatableText("nicephore.gui.screenshots.copy"), button -> {
-                final CopyImageToClipBoard imageToClipBoard = new CopyImageToClipBoard();
-                try {
-                    imageToClipBoard.copyImage(ImageIO.read(screenshots.get(index)));
-                    final File screenshot = screenshots.get(index);
-                    imageToClipBoard.copyImage(ImageIO.read(screenshot));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (CopyImageToClipBoard.getInstance().copyImage(screenshots.get(index))) {
+                    PlayerHelper.sendMessage(new TranslatableText("nicephore.clipboard.success"));
+                } else {
+                    PlayerHelper.sendMessage(new TranslatableText("nicephore.clipboard.error"));
                 }
             });
 
-            copyButton.active = !MinecraftClient.IS_SYSTEM_MAC && Objects.equals(System.getProperty("java.awt.headless"), "false");
+            copyButton.active = OperatingSystems.getOS().getManager() != null;
             if(!copyButton.active && (mouseX >= (double)copyButton.x && mouseY >= (double)copyButton.y && mouseX < (double)(copyButton.x + copyButton.getWidth()) && mouseY < (double)(copyButton.y + copyButton.getHeight()))) {
                 renderOrderedTooltip(matrixStack, client.textRenderer.wrapLines(new TranslatableText("nicephore.gui.screenshots.copy.unable").formatted(Formatting.RED), 200), mouseX, mouseY);
             }

@@ -1,6 +1,6 @@
 {
-  "nicephore.clipboard.error": "Erreur à la copie de la dernière capture d'écan",
-  "nicephore.clipboard.success": "La dernière capture d'écran copiée dans le presse-papier",
+  "nicephore.clipboard.error": "Erreur à la copie de la capture d'écan",
+  "nicephore.clipboard.success": "Capture d'écran copiée dans le presse-papier",
   "nicephore.gui.delete": "Supprimer une capture d'écran ?",
   "nicephore.gui.delete.no": "Non",
   "nicephore.gui.delete.question": "Voulez-vous vraiment supprimer la capture d'écran %s ?",

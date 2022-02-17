@@ -1,8 +1,7 @@
 package com.vandendaelen.nicephore.config;
 
 import com.vandendaelen.nicephore.Nicephore;
-import com.vandendaelen.nicephore.util.ScreenshotFilter;
-import com.vandendaelen.nicephore.util.Util;
+import com.vandendaelen.nicephore.enums.ScreenshotFilter;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
