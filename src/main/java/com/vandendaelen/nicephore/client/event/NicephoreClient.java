@@ -14,7 +14,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 @Environment(EnvType.CLIENT)
@@ -52,9 +52,9 @@ public class NicephoreClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (copyKeyBinding.wasPressed()) {
                 if (CopyImageToClipBoard.getInstance().copyLastScreenshot()) {
-                    PlayerHelper.sendMessage(new TranslatableText("nicephore.clipboard.success"));
+                    PlayerHelper.sendMessage(Text.translatable("nicephore.clipboard.success"));
                 } else {
-                    PlayerHelper.sendMessage(new TranslatableText("nicephore.clipboard.error"));
+                    PlayerHelper.sendMessage(Text.translatable("nicephore.clipboard.error"));
                 }
             }
 
@@ -62,7 +62,7 @@ public class NicephoreClient implements ClientModInitializer {
                 if (ScreenshotScreen.canBeShow()) {
                     MinecraftClient.getInstance().setScreen(new ScreenshotScreen());
                 } else {
-                    PlayerHelper.sendHotbarMessage(new TranslatableText("nicephore.screenshots.empty"));
+                    PlayerHelper.sendHotbarMessage(Text.translatable("nicephore.screenshots.empty"));
                 }
             }
 
@@ -70,7 +70,7 @@ public class NicephoreClient implements ClientModInitializer {
                 if (GalleryScreen.canBeShow()) {
                     MinecraftClient.getInstance().setScreen(new GalleryScreen());
                 } else {
-                    PlayerHelper.sendHotbarMessage(new TranslatableText("nicephore.screenshots.empty"));
+                    PlayerHelper.sendHotbarMessage(Text.translatable("nicephore.screenshots.empty"));
                 }
             }
         });

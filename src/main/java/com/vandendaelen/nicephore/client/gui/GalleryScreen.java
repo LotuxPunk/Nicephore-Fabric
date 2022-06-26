@@ -12,8 +12,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -31,7 +30,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GalleryScreen extends Screen implements FilterListener {
-    private static final TranslatableText TITLE = new TranslatableText("nicephore.gui.screenshots");
+    private static final Text TITLE = Text.translatable("nicephore.gui.screenshots");
     private static final File SCREENSHOTS_DIR = new File(MinecraftClient.getInstance().runDirectory, "screenshots");
     private static final int ROW = 2;
     private static final int COLUMN = 4;
@@ -111,23 +110,23 @@ public class GalleryScreen extends Screen implements FilterListener {
         this.renderBackground(matrixStack);
 
         this.clearChildren();
-        this.addDrawableChild(new ButtonWidget(10, 10, 100, 20, new TranslatableText("nicephore.screenshot.filter", config.getFilter().name()), button -> changeFilter()));
-        this.addDrawableChild(new ButtonWidget(this.width - 60, 10, 50, 20, new TranslatableText("nicephore.screenshot.exit"), button -> onClose()));
+        this.addDrawableChild(new ButtonWidget(10, 10, 100, 20, Text.translatable("nicephore.screenshot.filter", config.getFilter().name()), button -> changeFilter()));
+        this.addDrawableChild(new ButtonWidget(this.width - 60, 10, 50, 20, Text.translatable("nicephore.screenshot.exit"), button -> close()));
 
         if (!screenshots.isEmpty()) {
-            this.addDrawableChild(new ButtonWidget(this.width / 2 - 80, this.height / 2 + 100, 20, 20, new LiteralText("<"), button -> modIndex(-1)));
-            this.addDrawableChild(new ButtonWidget(this.width / 2 + 60, this.height / 2 + 100, 20, 20, new LiteralText(">"), button -> modIndex(1)));
+            this.addDrawableChild(new ButtonWidget(this.width / 2 - 80, this.height / 2 + 100, 20, 20, Text.of("<"), button -> modIndex(-1)));
+            this.addDrawableChild(new ButtonWidget(this.width / 2 + 60, this.height / 2 + 100, 20, 20, Text.of(">"), button -> modIndex(1)));
         }
 
         if (pagesOfScreenshots.isEmpty()) {
-            drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.screenshots.empty"), centerX, 20, Color.RED.getRGB());
+            drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, Text.translatable("nicephore.screenshots.empty"), centerX, 20, Color.RED.getRGB());
         } else {
             final List<File> currentPage = pagesOfScreenshots.get(index);
             if (currentPage.stream().allMatch(File::exists)) {
                 SCREENSHOT_TEXTURES.forEach(TEXTURE -> {
                     final int imageIndex = SCREENSHOT_TEXTURES.indexOf(TEXTURE);
                     final String name = currentPage.get(imageIndex).getName();
-                    final LiteralText text = new LiteralText(StringUtils.abbreviate(name, 13));
+                    final Text text = Text.of(StringUtils.abbreviate(name, 13));
 
                     int x = centerX - (15 - (imageIndex % 4) * 10) - (2 - (imageIndex % 4)) * imageWidth;
                     int y = 50 + (imageIndex / 4 * (imageHeight + 30));
@@ -141,7 +140,7 @@ public class GalleryScreen extends Screen implements FilterListener {
                     this.addDrawableChild(new ButtonWidget(x, y + 5 + imageHeight, imageWidth, 20, text, button -> openScreenshotScreen(screenshots.indexOf(currentPage.get(imageIndex)))));
                 });
 
-                drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, new TranslatableText("nicephore.gui.gallery.pages", index + 1, pagesOfScreenshots.size()), centerX, this.height / 2 + 105, Color.WHITE.getRGB());
+                drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, Text.translatable("nicephore.gui.gallery.pages", index + 1, pagesOfScreenshots.size()), centerX, this.height / 2 + 105, Color.WHITE.getRGB());
             }
         }
 
@@ -150,7 +149,7 @@ public class GalleryScreen extends Screen implements FilterListener {
 
     private void drawExtensionBadge(MatrixStack matrixStack, String extension, int x, int y) {
         if (config.getFilter() == ScreenshotFilter.BOTH) {
-            drawTextWithShadow(matrixStack, MinecraftClient.getInstance().textRenderer, new LiteralText(extension.toUpperCase()), x + 12, y - 12, Color.WHITE.getRGB());
+            drawTextWithShadow(matrixStack, MinecraftClient.getInstance().textRenderer, Text.of(extension.toUpperCase()), x + 12, y - 12, Color.WHITE.getRGB());
         }
     }
 
@@ -180,16 +179,17 @@ public class GalleryScreen extends Screen implements FilterListener {
     }
 
     private void closeScreen(String textComponentId) {
-        this.onClose();
-        PlayerHelper.sendHotbarMessage(new TranslatableText(textComponentId));
+        this.close();
+        PlayerHelper.sendHotbarMessage(Text.translatable(textComponentId));
     }
 
+
     @Override
-    public void onClose() {
+    public void close() {
         SCREENSHOT_TEXTURES.forEach(NativeImageBackedTexture::close);
         SCREENSHOT_TEXTURES.clear();
 
-        super.onClose();
+        super.close();
     }
 
     @Override

@@ -8,7 +8,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import javax.imageio.IIOImage;
@@ -59,7 +59,7 @@ public final class JPEGThread extends Thread {
             // only run optimisation-related code if "optimiseScreenshots" is true in the config
             if (config.isOptimisedOutput()) {
                 if (config.isShowOptimisationStatus()) {
-                    PlayerHelper.sendHotbarMessage(new TranslatableText("nicephore.screenshot.optimize"));
+                    PlayerHelper.sendHotbarMessage(Text.translatable("nicephore.screenshot.optimize"));
                 }
 
                 // only run JPEG optimisation with ECT if we "makeJPEGs" is true in the config
@@ -89,7 +89,7 @@ public final class JPEGThread extends Thread {
                 }
 
                 if (config.isShowOptimisationStatus()) {
-                    PlayerHelper.sendHotbarMessage(new TranslatableText("nicephore.screenshot.optimizeFinished"));
+                    PlayerHelper.sendHotbarMessage(Text.translatable("nicephore.screenshot.optimizeFinished"));
                 }
             }
 
@@ -97,30 +97,30 @@ public final class JPEGThread extends Thread {
             if (config.isScreenshotCustomMessage()) {
                 if (config.isScreenshotToClipboard()) {
                     if (CopyImageToClipBoard.getInstance().copyLastScreenshot()) {
-                        PlayerHelper.sendMessage(new TranslatableText("nicephore.clipboard.success").formatted(Formatting.GREEN));
+                        PlayerHelper.sendMessage(Text.translatable("nicephore.clipboard.success").formatted(Formatting.GREEN));
                     } else {
-                        PlayerHelper.sendMessage(new TranslatableText("nicephore.clipboard.error").formatted(Formatting.RED));
+                        PlayerHelper.sendMessage(Text.translatable("nicephore.clipboard.error").formatted(Formatting.RED));
                     }
                 }
 
-                final MutableText pngComponent = (new TranslatableText("nicephore.screenshot.png")).formatted(Formatting.UNDERLINE).styled((style)
+                final MutableText pngComponent = (Text.translatable("nicephore.screenshot.png")).formatted(Formatting.UNDERLINE).styled((style)
                         -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, screenshot.getAbsolutePath())));
 
-                final MutableText jpgComponent = (new TranslatableText("nicephore.screenshot.jpg")).formatted(Formatting.UNDERLINE).styled((style)
+                final MutableText jpgComponent = (Text.translatable("nicephore.screenshot.jpg")).formatted(Formatting.UNDERLINE).styled((style)
                         -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, jpegFile.getAbsolutePath())));
 
-                final MutableText folderComponent = (new TranslatableText("nicephore.screenshot.folder")).formatted(Formatting.UNDERLINE).styled((style)
+                final MutableText folderComponent = (Text.translatable("nicephore.screenshot.folder")).formatted(Formatting.UNDERLINE).styled((style)
                         -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, screenshot.getParent())));
 
 
                 if (config.makeJPEGs()) {
-                    PlayerHelper.sendMessage(new TranslatableText("nicephore.screenshot.options", pngComponent, jpgComponent, folderComponent));
+                    PlayerHelper.sendMessage(Text.translatable("nicephore.screenshot.options", pngComponent, jpgComponent, folderComponent));
                 } else {
-                    PlayerHelper.sendMessage(new TranslatableText("nicephore.screenshot.reducedOptions", pngComponent, folderComponent));
+                    PlayerHelper.sendMessage(Text.translatable("nicephore.screenshot.reducedOptions", pngComponent, folderComponent));
                 }
             }
         } catch (IOException e) {
-            PlayerHelper.sendMessage(new TranslatableText("nicephore.screenshot.error"));
+            PlayerHelper.sendMessage(Text.translatable("nicephore.screenshot.error"));
         }
     }
 }
