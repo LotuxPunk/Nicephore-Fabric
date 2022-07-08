@@ -10,7 +10,7 @@ Requirements: [Fabric Loader](https://fabricmc.net/use/)
 
 ### 1. Via CurseForge:
  
-[![](https://cf.way2muchnoise.eu/full_nicephore_downloads%20on%20CurseForge.svg?badge_style=round)](https://www.curseforge.com/minecraft/mc-mods/nicephore-fabric)
+[![](https://cf.way2muchnoise.eu/full_nicephore-fabric_downloads%20on%20CurseForge.svg?badge_style=round)](https://www.curseforge.com/minecraft/mc-mods/nicephore-fabric)
 
 ### 2. Compiling the source code
 You have to follow the steps below:
