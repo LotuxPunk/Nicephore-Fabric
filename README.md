@@ -35,4 +35,4 @@ Please make sure to update tests as appropriate.
 You can use the [Issues section](https://github.com/LotuxPunk/Nicephore-Fabric/issues) to report bugs or give feedback.
 
 ## License
-This mod is licenseed under the [MIT License](LICENSE).
+This mod is licensed under the [MIT License](LICENSE).
