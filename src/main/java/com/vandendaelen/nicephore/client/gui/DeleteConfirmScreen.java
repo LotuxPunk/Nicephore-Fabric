@@ -1,6 +1,8 @@
 package com.vandendaelen.nicephore.client.gui;
 
+import com.vandendaelen.nicephore.Nicephore;
 import com.vandendaelen.nicephore.helper.PlayerHelper;
+import com.vandendaelen.nicephore.util.CopyImageToClipBoard;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -9,6 +11,8 @@ import net.minecraft.text.Text;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 public class DeleteConfirmScreen extends Screen {
 
@@ -31,12 +35,18 @@ public class DeleteConfirmScreen extends Screen {
     protected void init() {
         super.init();
 
+        var confirmButton = ButtonWidget.builder(Text.translatable("nicephore.gui.delete.yes"), button -> {
+                    deleteScreenshot();
+                    MinecraftClient.getInstance().setScreen(new ScreenshotScreen(screenshotScreenIndex, galleryScreenIndex));
+                }).dimensions(this.width / 2 - 35, this.height / 2 + 30, 30, 20)
+                .build();
+        var denyButton = ButtonWidget.builder(Text.translatable("nicephore.gui.delete.no"), button -> MinecraftClient.getInstance().setScreen(new ScreenshotScreen()))
+                .dimensions(this.width / 2 + 5, this.height / 2 + 30, 30, 20)
+                .build();
+
         this.children().clear();
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 35, this.height / 2 + 30, 30, 20, Text.translatable("nicephore.gui.delete.yes"), button -> {
-            deleteScreenshot();
-            MinecraftClient.getInstance().setScreen(new ScreenshotScreen(screenshotScreenIndex, galleryScreenIndex));
-        }));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 + 5, this.height / 2 + 30, 30, 20, Text.translatable("nicephore.gui.delete.no"), button -> MinecraftClient.getInstance().setScreen(new ScreenshotScreen())));
+        this.addDrawableChild(confirmButton);
+        this.addDrawableChild(denyButton);
 
     }
 
@@ -49,10 +59,20 @@ public class DeleteConfirmScreen extends Screen {
     }
 
     private void deleteScreenshot() {
-        if (this.file.exists() && this.file.delete()) {
-            PlayerHelper.sendMessage(Text.translatable("nicephore.screenshot.deleted.success", file.getName()));
-        } else {
+        if (CopyImageToClipBoard.getInstance().isLastScreenshot(this.file)) {
+            CopyImageToClipBoard.getInstance().setLastScreenshot(null);
+        }
+
+        try {
+            if (Files.deleteIfExists(file.toPath())) {
+                PlayerHelper.sendMessage(Text.translatable("nicephore.screenshot.deleted.success", file.getName()));
+            } else {
+                PlayerHelper.sendMessage(Text.translatable("nicephore.screenshot.deleted.error", file.getName()));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
             PlayerHelper.sendMessage(Text.translatable("nicephore.screenshot.deleted.error", file.getName()));
         }
+
     }
 }

@@ -109,13 +109,24 @@ public class GalleryScreen extends Screen implements FilterListener {
 
         this.renderBackground(matrixStack);
 
+        final var filterButton = ButtonWidget.builder(Text.translatable("nicephore.screenshot.filter", config.getFilter().name()), button -> changeFilter())
+                .dimensions(10, 10, 100, 20)
+                .build();
+
+        final var exitButton = ButtonWidget.builder(Text.translatable("nicephore.screenshot.exit"), button -> close())
+                .dimensions(this.width - 60, 10, 50, 20)
+                .build();
+
         this.clearChildren();
-        this.addDrawableChild(new ButtonWidget(10, 10, 100, 20, Text.translatable("nicephore.screenshot.filter", config.getFilter().name()), button -> changeFilter()));
-        this.addDrawableChild(new ButtonWidget(this.width - 60, 10, 50, 20, Text.translatable("nicephore.screenshot.exit"), button -> close()));
+        this.addDrawableChild(filterButton);
+        this.addDrawableChild(exitButton);
 
         if (!screenshots.isEmpty()) {
-            this.addDrawableChild(new ButtonWidget(this.width / 2 - 80, this.height / 2 + 100, 20, 20, Text.of("<"), button -> modIndex(-1)));
-            this.addDrawableChild(new ButtonWidget(this.width / 2 + 60, this.height / 2 + 100, 20, 20, Text.of(">"), button -> modIndex(1)));
+            final var previousButton = ButtonWidget.builder(Text.of("<"), button -> modIndex(-1)).dimensions(this.width / 2 - 80, this.height / 2 + 100, 20, 20).build();
+            final var nextButton = ButtonWidget.builder(Text.of(">"), button -> modIndex(1)).dimensions(this.width / 2 + 60, this.height / 2 + 100, 20, 20).build();
+
+            this.addDrawableChild(previousButton);
+            this.addDrawableChild(nextButton);
         }
 
         if (pagesOfScreenshots.isEmpty()) {
@@ -137,7 +148,10 @@ public class GalleryScreen extends Screen implements FilterListener {
                     RenderSystem.disableBlend();
 
                     drawExtensionBadge(matrixStack, FilenameUtils.getExtension(name), x - 10, y + 14);
-                    this.addDrawableChild(new ButtonWidget(x, y + 5 + imageHeight, imageWidth, 20, text, button -> openScreenshotScreen(screenshots.indexOf(currentPage.get(imageIndex)))));
+
+                    var openImageButton = ButtonWidget.builder(text, button -> openScreenshotScreen(screenshots.indexOf(currentPage.get(imageIndex)))).dimensions(x, y + 5 + imageHeight, imageWidth, 20).build();
+
+                    this.addDrawableChild(openImageButton);
                 });
 
                 drawCenteredText(matrixStack, MinecraftClient.getInstance().textRenderer, Text.translatable("nicephore.gui.gallery.pages", index + 1, pagesOfScreenshots.size()), centerX, this.height / 2 + 105, Color.WHITE.getRGB());

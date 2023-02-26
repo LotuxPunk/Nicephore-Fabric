@@ -142,28 +142,40 @@ public class ScreenshotScreen extends Screen {
 
         this.renderBackground(matrixStack);
 
+        final var filterButton = ButtonWidget.builder(Text.translatable("nicephore.screenshot.filter", config.getFilter().name()), button -> changeFilter())
+                .dimensions(10, 10, 100, 20)
+                .build();
+
+        final var exitButton = ButtonWidget.builder(Text.translatable("nicephore.screenshot.exit"), button -> close())
+                .dimensions(this.width - 60, 10, 50, 20)
+                .build();
+
         this.clearChildren();
-        this.addDrawableChild(new ButtonWidget(10, 10, 100, 20, Text.translatable("nicephore.screenshot.filter", config.getFilter().name()), button -> changeFilter()));
-        this.addDrawableChild(new ButtonWidget(this.width - 60, 10, 50, 20, Text.translatable("nicephore.screenshot.exit"), button -> close()));
+        this.addDrawableChild(filterButton);
+        this.addDrawableChild(exitButton);
 
         if (!screenshots.isEmpty()) {
-            this.addDrawableChild(new ButtonWidget(this.width / 2 + 60, this.height / 2 + 75, 20, 20, Text.of(">"), button -> modIndex(1)));
-            this.addDrawableChild(new ButtonWidget(this.width / 2 - 80, this.height / 2 + 75, 20, 20, Text.of("<"), button -> modIndex(-1)));
-            ButtonWidget copyButton = new ButtonWidget(this.width / 2 - 52, this.height / 2 + 75, 50, 20, Text.translatable("nicephore.gui.screenshots.copy"), button -> {
+            final var previousButton = ButtonWidget.builder(Text.of("<"), button -> modIndex(-1)).dimensions(this.width / 2 - 80, this.height / 2 + 100, 20, 20).build();
+            final var nextButton = ButtonWidget.builder(Text.of(">"), button -> modIndex(1)).dimensions(this.width / 2 + 60, this.height / 2 + 100, 20, 20).build();
+
+            this.addDrawableChild(previousButton);
+            this.addDrawableChild(nextButton);
+
+            var copyButton = ButtonWidget.builder(Text.translatable("nicephore.gui.screenshots.copy"), button -> {
                 if (CopyImageToClipBoard.getInstance().copyImage(screenshots.get(index))) {
                     PlayerHelper.sendMessage(Text.translatable("nicephore.clipboard.success"));
                 } else {
                     PlayerHelper.sendMessage(Text.translatable("nicephore.clipboard.error"));
                 }
-            });
+            }).dimensions(this.width / 2 - 52, this.height / 2 + 75, 50, 20).build();
 
             copyButton.active = OperatingSystems.getOS().getManager() != null;
-            if (!copyButton.active && (mouseX >= (double) copyButton.x && mouseY >= (double) copyButton.y && mouseX < (double) (copyButton.x + copyButton.getWidth()) && mouseY < (double) (copyButton.y + copyButton.getHeight()))) {
+            if (!copyButton.active && (mouseX >= (double) copyButton.getX() && mouseY >= (double) copyButton.getY() && mouseX < (double) (copyButton.getX() + copyButton.getWidth()) && mouseY < (double) (copyButton.getY() + copyButton.getHeight()))) {
                 renderOrderedTooltip(matrixStack, client.textRenderer.wrapLines(Text.translatable("nicephore.gui.screenshots.copy.unable").formatted(Formatting.RED), 200), mouseX, mouseY);
             }
 
             this.addDrawableChild(copyButton);
-            this.addDrawableChild(new ButtonWidget(this.width / 2 + 3, this.height / 2 + 75, 50, 20, Text.translatable("nicephore.gui.screenshots.delete"), button -> deleteScreenshot(screenshots.get(index))));
+            this.addDrawableChild(ButtonWidget.builder(Text.translatable("nicephore.gui.screenshots.delete"), button -> deleteScreenshot(screenshots.get(index))).dimensions(this.width / 2 + 3, this.height / 2 + 75, 50, 20).build());
         }
 
         if (screenshots.isEmpty()) {
